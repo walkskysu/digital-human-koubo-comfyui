@@ -42,7 +42,7 @@
    - `--face` 自动量主播脸中心，供小窗裁切用。
    - 报 GAP 就是场景没接上。
 7. **素材**：
-   - 景深字：`cutout_video.py cut/<段>.mp4 public/cut/<段>.webm`（Vision 抠像，本地）。
+   - 景深字：`cutout_video.py cut/<段>.mp4 public/cut/<段>.webm`（macOS 用 Vision，其他系统用本地 ComfyUI BiRefNet）。
    - B-roll：放 `public/broll/B01.mp4…`。
    - 贴纸：放 `public/stickers/`。
 8. **声音**：

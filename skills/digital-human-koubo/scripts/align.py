@@ -4,6 +4,8 @@
 tl.json = {"total": 秒, "segs": [{"i","id","start","end","text","chars":{"字符下标": 秒}}]}（chars 是整片绝对时间）
 字幕和念法不一样时，在 script.json 那段加 "sub": {"SKILL 点 M D": "SKILL.md"}：对齐按念法，字幕显示右边的写法，时间跟着换。"""
 import json, difflib, sys
+sys.path.insert(0, __import__('os').path.dirname(__file__))
+from numcn import cn_digits
 from pathlib import Path
 a = sys.argv[1:]
 if not a: sys.exit(__doc__)
@@ -15,7 +17,7 @@ for i, s in enumerate(S, 1):
     sid, text = s['id'], s['t']; keep = Q[sid]['keep']
     tk = []
     for t in json.load(open(f'cut/{sid}.json', errors='replace'))['transcription']:
-        a0, a1 = t['offsets']['from'] / 1000, t['offsets']['to'] / 1000; tx = t['text'].strip()
+        a0, a1 = t['offsets']['from'] / 1000, t['offsets']['to'] / 1000; tx = cn_digits(t['text'].strip())  # 「72」→「七十二」，按念法对齐
         if not tx or tx.startswith('['): continue
         for k, ch in enumerate(tx):
             if ch not in PUNCT: tk.append((ch.lower(), a0 + (a1 - a0) * k / len(tx)))

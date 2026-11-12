@@ -63,5 +63,77 @@
   "es": "100%",
   "ar": "99%",
   "note": "2026-10 第三期实测 whisper 回听准确率；台词提前翻好再写进提示词"
+ },
+ "comfy": {
+  "note": "本地 ComfyUI 流程（scripts/comfy_batch.py）：Qwen3-TTS 克隆配音 → MiniMax H3 Reference to Video（<Audio 1> fully_copy 对口型）→ 原配音合回。2026-11-12 实测 10 秒段 672×1216 4 步约 8 分钟。",
+  "url": "http://127.0.0.1:8188",
+  "workflows": {
+   "tts": "comfy/tts_clone.api.json",
+   "video": "comfy/h3_r2v_audio.api.json"
+  },
+  "fps": 24,
+  "max_line_seconds": 14.0,
+  "tail_seconds": 0.3,
+  "tts_model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+  "prompt_template": "subject_definitions:\n<Subject 1> is the {who} in <Picture 1>: {look}.\n<Audio 1> is the complete spoken {lang} vocal track of <Subject 1> (S1), {voice}.\n\nsummary:\n[reference generation + audio reuse] The target video is a single continuous {framing} talking-head shot of <Subject 1> {purpose}, with lip movements precisely synchronized to <Audio 1>, which is reused as the complete final audio track.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1]): fully_preserved - face, hairstyle, outfit, framing and lighting stay identical to <Picture 1>.\n<Audio 1>: fully_copy - <Audio 1> is reused 1:1 as the target video's complete final audio track, and every syllable drives the matching mouth shape of <Subject 1>.\n\ndetailed_description:\n[Shot 1] {shot_desc} <Subject 1> (S1) speaks {lang} with lips, jaw and tongue clearly lip-synced to every syllable of <Audio 1>: <d>[{lang_tag}] {line}</d> {act}. {camera} During any silent pause in <Audio 1> her lips rest gently closed. After the last word {pron} closes {poss} lips into a soft smile and holds eye contact until the final frame. No subtitles, no captions, no on-screen text.\n\noverall_soundscape: Only <Audio 1> is heard, with quiet indoor room tone underneath; no added sound effects.\n\nnon_diegetic_music: None.",
+  "hosts": {
+   "tank": {
+    "avatar": "assets/avatar_ref.jpg",
+    "size": [
+     672,
+     1216
+    ],
+    "voice_ref": "assets/voice_ref_tank.flac",
+    "voice_ref_text": "大家好呀，今天跟你聊一个特别实用的小技巧：只要一张照片加一句话，就能做出一条数字人口播视频，而且整个过程全部在本地完成。",
+    "who": "young East Asian woman",
+    "pron": "she",
+    "poss": "her",
+    "framing": "vertical handheld selfie",
+    "look": "long black hair with loose strands framing her face, pink lips, a small mole on her chest, a white ribbed tank top, close selfie framing under warm natural indoor light against a plain dark ceiling",
+    "voice": "a clear, lively young female voice",
+    "shot_desc": "A vertical handheld selfie close-up of <Subject 1>, framed from the top of her head to her chest exactly as in <Picture 1>, warm sunlight across her face, plain dark ceiling behind her. She looks straight into the lens with warm eye contact and a relaxed, friendly smile.",
+    "camera": "The phone camera has only a very slight natural handheld sway, no zoom, no cuts.",
+    "look_person": "long black hair with loose strands framing her face, pink lips, a small mole on her chest, a white ribbed tank top"
+   },
+   "me": {
+    "avatar": "assets/host_me_polo.jpg",
+    "size": [
+     1216,
+     672
+    ],
+    "voice_ref": null,
+    "voice_ref_text": "",
+    "who": "man",
+    "pron": "he",
+    "poss": "his",
+    "framing": "locked-off studio",
+    "look": "glasses, a navy polo shirt, gray studio backdrop and soft lighting",
+    "voice": "a warm, steady, confident male voice around 35 years old",
+    "shot_desc": "A locked-off medium shot of <Subject 1> in front of the gray studio backdrop exactly as in <Picture 1>, soft even lighting. He looks straight into the lens with friendly eye contact.",
+    "camera": "Locked-off camera, no zoom, no cuts.",
+    "note": "用户本人形象只用于用户自己的片子；voice_ref 需要用户本人录音（12–20 秒干声）"
+   },
+   "girl": {
+    "note": "定妆照 assets/host_girl_medium.png（浅灰底中景）；avatar 是用它合成的 16:9 讲解演播室图（comfy_scene.py）。音色是 Qwen3-TTS VoiceDesign 设计的，参照文本见 voice_ref_text。",
+    "master": "assets/host_girl_medium.png",
+    "avatar": "assets/host_girl_studio.png",
+    "size": [
+     1216,
+     672
+    ],
+    "voice_ref": "assets/voice_ref_girl.flac",
+    "voice_ref_text": "大家好，欢迎来到今天的知识小课堂。今天我们不讲复杂的公式，只用一个简单的例子，帮你把这件事想明白。听完这期，你会发现，理财其实没有那么难。",
+    "voice_design": "二十多岁的年轻女性，声音温和知性、干净清亮，普通话标准，咬字清楚，语速适中偏稳，语气亲切自然、带一点笑意，像知识类视频博主在耐心讲解，不夸张不做作。",
+    "who": "young East Asian woman",
+    "pron": "she",
+    "poss": "her",
+    "framing": "locked-off medium",
+    "look": "long straight black hair with full bangs, a cream-white ribbed tank top, standing in a calm knowledge-explainer studio with a dark blue-gray wall, softly blurred bookshelf and plants, soft frontal lighting",
+    "voice": "a gentle, clear, intellectual young female voice",
+    "shot_desc": "A locked-off medium shot of <Subject 1> standing at the center of the studio, framed from the waist up exactly as in <Picture 1>, with generous headroom and background visible on both sides. She looks straight into the lens with calm, friendly eye contact.",
+    "camera": "Locked-off camera on a tripod, no zoom, no cuts.",
+    "look_person": "long straight black hair with full bangs, a cream-white ribbed tank top"
+   }
+  }
  }
 }

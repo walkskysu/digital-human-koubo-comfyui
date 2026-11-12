@@ -53,7 +53,7 @@ body{width:%(W)dpx;height:%(H)dpx;overflow:hidden;font-family:"PingFang SC","Hir
 .accent{color:%(acc)s}
 .sub{font-weight:800;white-space:nowrap}
 .tags{display:flex;gap:18px;flex-wrap:nowrap}
-.tag{font-weight:800;color:#fff;background:%(ink)s;border-radius:16px;padding:10px 24px;white-space:nowrap}
+.tag{font-weight:800;color:%(tagfg)s;background:%(ink)s;border-radius:16px;padding:10px 24px;white-space:nowrap}
 .url{font-family:"SF Mono",Menlo,monospace;font-weight:600;color:%(mute)s;white-space:nowrap}
 .host{position:absolute;overflow:hidden;border-radius:36px;box-shadow:0 40px 90px rgba(15,20,25,.28);background:#cfd0d3}
 .host img{width:100%%;height:100%%;object-fit:cover;object-position:50%% 20%%;display:block}
@@ -75,7 +75,7 @@ def page(spec, ratio, host_uri, props):
     dark = spec.get("theme") == "dark"
     pal = dict(W=W, H=H, bg="#0f1419" if dark else "radial-gradient(ellipse at 30% 20%,#fdfdfd 0%,#f4f5f6 50%,#e6e8eb 100%)",
                ink="#ffffff" if dark else "#0f1419", mute="#8b98a5" if dark else "#536471",
-               dot="rgba(255,255,255,.06)" if dark else "rgba(15,20,25,.08)", acc=spec.get("accent_color", "#f4212e"), k=34)
+               dot="rgba(255,255,255,.06)" if dark else "rgba(15,20,25,.08)", acc=spec.get("accent_color", "#f4212e"), k=34, tagfg="#0f1419" if dark else "#fff")
     e = lambda s: html.escape(s or "")
     tags = "".join(f'<div class="tag" style="font-size:{40 if ratio != "9:16" else 44}px">{e(x)}</div>' for x in spec.get("tags", [])[:3])
     disc = e(spec.get("disclosure", "内容由 AI 数字人演绎"))

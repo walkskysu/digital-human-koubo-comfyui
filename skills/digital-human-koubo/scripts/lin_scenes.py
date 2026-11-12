@@ -45,13 +45,17 @@ for x, y in zip(scenes, scenes[1:]):
     if abs(x['b'] - y['a']) > 0.05: print(f"GAP {x['type']} 结束 {x['b']} → {y['type']} 开始 {y['a']}"); bad += 1
 cfg = plan.get('config', {})
 if '--face' in a:
-    import subprocess, tempfile, os
+    import subprocess, tempfile, os, shutil
     root = Path(opt('--out', 'src/scenes.json')).resolve().parent.parent
-    sw = Path(__file__).with_name('face_center.swift')
-    png = tempfile.mktemp(suffix='.png')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '3', '-i', str(root / 'public/main.mp4'), '-frames:v', '1', '-vf', 'scale=1920:1080', png], check=True)
-    out = subprocess.run(['swift', str(sw), png], capture_output=True, text=True).stdout.split()
+    # 先用跨平台的 face_center.py（mediapipe），不行再用 macOS 的 face_center.swift
+    r = subprocess.run([sys.executable, str(Path(__file__).with_name('face_center.py')), str(root / 'public/main.mp4'), '--t', '3'], capture_output=True, text=True)
+    out = r.stdout.split()
+    if len(out) != 2 and shutil.which('swift'):
+        png = tempfile.mktemp(suffix='.png')
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '3', '-i', str(root / 'public/main.mp4'), '-frames:v', '1', '-vf', 'scale=1920:1080', png], check=True)
+        out = subprocess.run(['swift', str(Path(__file__).with_name('face_center.swift')), png], capture_output=True, text=True).stdout.split()
     if len(out) == 2: cfg['face'] = [int(float(out[0])), int(float(out[1]))]; print('face', cfg['face'])
+    else: print('⚠ 没量到脸（主播小窗按默认位置）：', (r.stderr.strip().splitlines() or ['未检测到人脸'])[-1])
 out = {'total': tl['total'], 'config': cfg, 'scenes': scenes}
 json.dump(out, open(opt('--out', 'src/scenes.json'), 'w'), ensure_ascii=False, indent=0)
 print(f"{len(scenes)} 个场景 · 总长 {tl['total']} 秒 · {'有 ' + str(bad) + ' 处空隙' if bad else '首尾相接'}")

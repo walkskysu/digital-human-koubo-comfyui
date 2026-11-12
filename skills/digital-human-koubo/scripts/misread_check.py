@@ -8,7 +8,7 @@ a = sys.argv[1:]
 if not a: sys.exit(__doc__)
 opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
 S = json.load(open(a[0])); cut = opt('--cut', 'cut'); ids = set(opt('--ids').split(',')) if opt('--ids') else None
-WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin', '~/.cache/whisper/ggml-medium-q5_0.bin']) if os.path.exists(p)), None)
+WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin', '~/whisper.cpp/models/ggml-medium-q5_0.bin', '~/.cache/whisper/ggml-medium-q5_0.bin']) if os.path.exists(p)), None)
 T2S = str.maketrans('們說這個裡麼開銷費國來長還沒錢會時後們對嗎讓過買兩萬億號歲學實際資產聽們讀變賺樂頭點為發見體條經義遠業應與夠單從當進現產間關門問題風險銀行條證寶貝數據統計報告億幾萬塊元萬', '们说这个里么开销费国来长还没钱会时后们对吗让过买两万亿号岁学实际资产听们读变赚乐头点为发见体条经义远业应与够单从当进现产间关门问题风险银行条证宝贝数据统计报告亿几万块元万')
 HAN = re.compile('[^' + chr(0x4e00) + '-' + chr(0x9fff) + ']')
 NUMC = '零〇一二三四五六七八九十百千万亿点两'

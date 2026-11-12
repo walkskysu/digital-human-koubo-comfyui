@@ -8,6 +8,8 @@
 - 念错字另用 misread_check.py（不带原文提示逐句转写）查，用 patch_words.py 只换错句；改完 --rejoin 只重新拼接
 - 拼接前每段音频补齐/裁到和画面完全等长（PCM .mov 中转），否则几十段拼下来声音会累积落后口型（2026-10 实测 44 段到 4:43 晚 0.38 秒）"""
 import json, subprocess, difflib, re, os, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from numcn import cn_digits
 from pathlib import Path
 a = sys.argv[1:]
 if len(a) < 2: sys.exit(__doc__)
@@ -15,11 +17,12 @@ S = json.load(open(a[0])); IDS = json.load(open(a[1]))
 opt = lambda k, d: a[a.index(k) + 1] if k in a else d
 out_name, lang, size = opt('--out', '成片_完整版.mp4'), opt('--lang', 'zh'), opt('--size', '')
 REJOIN = '--rejoin' in a
-WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin', '~/.cache/whisper/ggml-medium-q5_0.bin', '~/models/ggml-medium.bin']) if os.path.exists(p)), '~/models/ggml-medium-q5_0.bin')
-clean = lambda s: re.sub(r'[\s，。、：；！？,.:;!?“”]', '', s).lower()
+SRC = opt('--src', 'gen/renoise-{tid}.mp4')   # 本地 ComfyUI 出的片子用 --src 'gen/{id}.mp4'（comfy_batch.py）
+WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin', '~/whisper.cpp/models/ggml-medium-q5_0.bin', '~/.cache/whisper/ggml-medium-q5_0.bin', '~/models/ggml-medium.bin']) if os.path.exists(p)), '~/models/ggml-medium-q5_0.bin')
+clean = lambda s: re.sub(r'[\s，。、：；！？,.:;!?“”]', '', cn_digits(s)).lower()   # 「72」和「七十二」算同一个
 Path('cut').mkdir(exist_ok=True); rep = []
 for s in ([] if REJOIN else S):
-    sid = s['id']; src = f"gen/renoise-{IDS[sid]}.mp4"; wav = f'cut/{sid}.wav'
+    sid = s['id']; src = SRC.format(id=sid, tid=IDS[sid]); wav = f'cut/{sid}.wav'
     lg = s.get('lang_code', lang)
     subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', src, '-ar', '16000', '-ac', '1', wav], check=True)
     cmd = ['whisper-cli', '-m', WM, '-l', lg] + (['--prompt', '以下是普通话的句子。', '-ml', '1'] if lg == 'zh' else []) + ['-oj', '-of', f'cut/{sid}', '-f', wav]

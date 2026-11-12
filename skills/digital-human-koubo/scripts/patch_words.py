@@ -17,7 +17,7 @@ if len(a) < 2: sys.exit(__doc__)
 opt = lambda k, d=None: a[a.index(k) + 1] if k in a else d
 S = {s['id']: s for s in json.load(open(a[0]))}; spec = json.load(open(a[1])); cut = Path(opt('--cut', 'cut')); SR = 48000
 rv = cut / 'revoice'; rv.mkdir(exist_ok=True)
-WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin']) if os.path.exists(p)), None)
+WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin', '~/whisper.cpp/models/ggml-medium-q5_0.bin']) if os.path.exists(p)), None)
 def whisper(wav, ml=False):
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', wav, '-ar', '16000', '-ac', '1', '/tmp/_pw16.wav'])
     if ml:

@@ -20,13 +20,21 @@ if [ -n "$PY" ]; then
   done
   PWI="$PY -m pip install playwright && $PY -m playwright install chromium"
   $PY -c "import playwright" 2>/dev/null && ok "playwright" || need "playwright + chromium" "封面排版截图（make_cover.py）" "$PWI" "$PWI" "$PWI" "$PWI"
+  if [ $SYS != mac ]; then   # macOS 用 Vision（face_center.swift），其他系统用 mediapipe 量脸（小林式主播小窗定位）
+    FM="${FACE_MODEL:-$HOME/models/blaze_face_short_range.tflite}"
+    FMI="curl -L --create-dirs -o ~/models/blaze_face_short_range.tflite https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite"
+    if ! $PY -c "import mediapipe" 2>/dev/null; then need "mediapipe" "量脸位置（lin_scenes.py --face）" "" "$PY -m pip install mediapipe" "$PY -m pip install mediapipe" "$PY -m pip install mediapipe"
+    elif [ $SYS = linux ] && ! ldconfig -p 2>/dev/null | grep -q 'libGLESv2.so.2'; then need "libGLESv2（mediapipe 要用）" "量脸位置" "" "" "sudo apt install -y libgles2 libegl1" ""
+    elif [ ! -f "$FM" ]; then need "人脸模型 blaze_face_short_range.tflite" "量脸位置" "" "$FMI" "$FMI" "$FMI"
+    else ok "mediapipe + 人脸模型"; fi
+  fi
 else need "Python 3" "回听、对齐、声音统一脚本" "brew install python" "winget install Python.Python.3.12" "sudo apt install python3 python3-pip" "python.org 下载，或装 Anaconda / Miniconda"; fi
 if command -v node >/dev/null; then
   v=$(node -v | tr -d v | cut -d. -f1); [ "$v" -ge 18 ] && ok "Node $(node -v)" || need "Node 18 以上（现在是 $(node -v)）" "Remotion 剪辑" "brew upgrade node" "winget upgrade OpenJS.NodeJS.LTS" "nvm install --lts" "nodejs.org 下载 LTS"
 else need "Node 18+" "Remotion 剪辑" "brew install node" "winget install OpenJS.NodeJS.LTS" "sudo apt install nodejs npm  或  nvm install --lts" "nodejs.org 下载 LTS"; fi
 if command -v whisper-cli >/dev/null; then
   ok "whisper-cli"
-  M=$(ls "${WHISPER_MODEL:-/nonexistent}" ~/Library/Application\ Support/Murmur/models/ggml-medium*.bin ~/models/ggml-medium*.bin ~/.cache/whisper/ggml-medium*.bin 2>/dev/null | head -1)
+  M=$(ls "${WHISPER_MODEL:-/nonexistent}" ~/Library/Application\ Support/Murmur/models/ggml-medium*.bin ~/models/ggml-medium*.bin ~/whisper.cpp/models/ggml-medium*.bin ~/.cache/whisper/ggml-medium*.bin 2>/dev/null | head -1)
   [ -n "$M" ] && ok "whisper 模型 $(basename "$M")" || need "whisper 模型 ggml-medium-q5_0.bin" "逐段回听、逐字对齐" "下载到 ~/models/：curl -L -o ~/models/ggml-medium-q5_0.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium-q5_0.bin" "浏览器打开 huggingface.co/ggerganov/whisper.cpp 下载 ggml-medium-q5_0.bin 放到 %USERPROFILE%\\models\\" "同 macOS 的 curl 命令" "放在任意位置后 export WHISPER_MODEL=模型路径"
 else need "whisper-cli（whisper.cpp）" "逐段回听、逐字对齐" "brew install whisper-cpp" "github.com/ggerganov/whisper.cpp → Releases 下载 Windows 版" "git clone https://github.com/ggerganov/whisper.cpp && cd whisper.cpp && cmake -B build && cmake --build build -j" "源码编译，见 whisper.cpp README"; fi
 echo

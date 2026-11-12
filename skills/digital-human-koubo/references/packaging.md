@@ -75,7 +75,7 @@
 | GhostWord | 叠加 | 背景巨大鬼影词缓慢横移 | text, outline, opacity |
 
 ## 景深字 TextBehind 怎么做
-1. 先抠像（macOS Vision 人像分割，只抠要用的那几秒）：
+1. 先抠像（只抠要用的那几秒；macOS 默认用 Vision 人像分割，其他系统默认用本地 ComfyUI 的 BiRefNet，约 9 秒处理 1 秒素材，`--engine` 可指定）：
    `python3 scripts/cutout_video.py public/main.mp4 public/main_cut_s3.webm --from 16.0 --to 19.5`
    出透明 webm + 一条灰度遮罩（检查用）。边缘有背景灰边就加 `--shrink 2`；头发丝被吃掉就 `--shrink 0 --grow 1`。
 2. pack 里写：`{ "use": "TextBehind", "src": "main.mp4", "cutout": "main_cut_s3.webm", "cutoutFrom": 16.0, "at": "3:体验最好", "until": "3:end", "lines": [{ "t": "体验最好" }], "gradient": ["#FFFFFF", "#C9D2E0"] }`

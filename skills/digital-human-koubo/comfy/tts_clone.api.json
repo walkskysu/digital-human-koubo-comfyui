@@ -1,0 +1,65 @@
+{
+ "1": {
+  "class_type": "Qwen3TTSLoader",
+  "inputs": {
+   "model_repo": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+   "download_source": "ModelScope",
+   "precision": "bf16",
+   "attn_mode": "sdpa",
+   "auto_download": true
+  }
+ },
+ "2": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "__REF_AUDIO__"
+  }
+ },
+ "3": {
+  "class_type": "Qwen3TTSVoiceClonePrompt",
+  "inputs": {
+   "model_obj": [
+    "1",
+    0
+   ],
+   "ref_audio": [
+    "2",
+    0
+   ],
+   "x_vector_only": false,
+   "ref_text": "__REF_TEXT__"
+  }
+ },
+ "4": {
+  "class_type": "Qwen3TTSVoiceClone",
+  "inputs": {
+   "model_obj": [
+    "1",
+    0
+   ],
+   "voice_clone_prompt": [
+    "3",
+    0
+   ],
+   "target_text": "__LINE__",
+   "target_language": "Chinese",
+   "output_mode": "Concatenate (Merge)",
+   "seed": 0,
+   "max_new_tokens": 2048,
+   "temperature": 0.9,
+   "top_p": 1.0,
+   "top_k": 50,
+   "repetition_penalty": 1.05
+  }
+ },
+ "9": {
+  "class_type": "SaveAudio",
+  "inputs": {
+   "audio": [
+    "4",
+    0
+   ],
+   "filename_prefix": "koubo/tts"
+  }
+ }
+}

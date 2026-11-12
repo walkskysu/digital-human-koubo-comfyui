@@ -17,6 +17,23 @@ for c in ${DH_NODE_MODULES_FROM:-} ~/Desktop/packaging-lab ~/Desktop/renoise-kou
   if [ -d "$c/node_modules/remotion" ] && [ -d "$c/node_modules/lottie-web" ] && [ -d "$c/node_modules/d3-geo" ]; then cp -cR "$c/node_modules" "$DST/" 2>/dev/null || cp -R "$c/node_modules" "$DST/"; echo "node_modules ← $c"; break; fi
 done
 [ -d "$DST/node_modules" ] || (cd "$DST" && npm install)
+# Linux：Remotion 下载 Chrome Headless Shell 后的解压在新版 Node 上会静默失败（只解出 LICENSE，渲染报 No browser found）。
+# 第一次下载后用 Python 解压并缓存到 ~/.cache/dh-remotion，之后的工程直接复用（硬链接，不占空间）。
+if [ "$(uname -s)" = Linux ]; then
+  HSC=~/.cache/dh-remotion/chrome-headless-shell; HSD="$DST/node_modules/.remotion/chrome-headless-shell"
+  BIN=linux64/chrome-headless-shell-linux64/chrome-headless-shell
+  if [ ! -x "$HSD/$BIN" ]; then
+    if [ -x "$HSC/$BIN" ]; then mkdir -p "$(dirname "$HSD")" && rm -rf "$HSD" && (cp -al "$HSC" "$HSD" 2>/dev/null || { rm -rf "$HSD"; cp -R "$HSC" "$HSD"; })
+    else
+      (cd "$DST" && npx remotion browser ensure >/dev/null 2>&1) || true
+      if [ ! -x "$HSD/$BIN" ] && [ -f "$HSD/chrome-headless-shell-linux64.zip" ]; then
+        python3 -c "import zipfile,os,sys; z=zipfile.ZipFile(sys.argv[1]); [os.chmod(z.extract(i,sys.argv[2]),(i.external_attr>>16)&0o777 or 0o644) for i in z.infolist()]" "$HSD/chrome-headless-shell-linux64.zip" "$HSD/linux64"
+      fi
+      [ -x "$HSD/$BIN" ] && mkdir -p "$(dirname "$HSC")" && rm -rf "$HSC" && cp -R "$HSD" "$HSC" && rm -f "$HSC/chrome-headless-shell-linux64.zip"
+    fi
+    [ -x "$HSD/$BIN" ] && echo "✓ Chrome Headless Shell 就绪" || echo "⚠ Chrome Headless Shell 没装好：渲染报 No browser found 时，进工程跑 npx remotion browser ensure 后再跑一次本脚本"
+  fi
+fi
 # 音效 / 占位配乐：仓库里不带第三方音频，缺了就用代码合成一套（无版权）
 if [ ! -f "$DST/public/sfx/pop.wav" ] || [ ! -f "$DST/public/music/bgm.mp3" ]; then
   PY=""; for p in python3 python3.14 python3.13 python3.12 python3.11 python; do command -v $p >/dev/null 2>&1 && $p -c "import numpy" 2>/dev/null && PY=$p && break; done

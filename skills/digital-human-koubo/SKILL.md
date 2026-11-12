@@ -99,6 +99,21 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 3. `python3 scripts/make_cover.py cover.json` 生成 `cover/cover_16x9.jpg`（横屏），按 ratios 还会出 `cover_9x16.jpg`（竖屏）和 `cover_3x4.jpg`（小红书）。看一眼 `thumb_*.jpg`，540px 宽时标题要读得清，文字不能压到卡片。
 4. `python3 scripts/cover_first.py 成片.mp4 cover/cover_<比例>.jpg 交付.mp4`：封面停 0.5 秒后硬切进正片，声音整体后推 0.5 秒。抽 0 秒、0.45 秒、0.55 秒三帧确认。不带封面的版本另存为 `_无封面.mp4`。
 
+## 本地 ComfyUI 路线（不花 Renoise 积分，替换第 2–5 步）
+用户说「用本地 ComfyUI / 开源模型 / 不花积分」时走这条。先配音再出画面：Qwen3-TTS 克隆配音 → MiniMax H3 参考生视频（配音当 `<Audio 1>` fully_copy，口型跟着配音走）→ 把原配音合回画面。配置在 persona.json → `comfy`，流程 JSON 在 `comfy/`。
+1. **检查**：ComfyUI 能连上（`curl -s 127.0.0.1:8188/system_stats`），有 Qwen3-TTS 节点包和 H3 ref2va 模型 + 4 步 Lightning LoRA。主播要有 `voice_ref`（12–20 秒干声 + 逐字文本）。
+2. **估时**：`python scripts/comfy_batch.py script.json --stage plan`（用 `~/.venvs/comfy-mcp/bin/python`，要 PyAV）。不花钱但占 GPU：10 秒一段约 8 分钟（RTX 3090，672×1216，4 步），报给用户。
+3. **配音**：`--stage tts`。每段配完自动用 SenseVoice 不带原文回听，准确率 < 90% 打 ⚠；念错就在 script.json 那段加 `"seed": 新数` 再跑（只重配这一段）。单段超过 14 秒报错：拆短台词。先让用户听第 1 段确认音色。
+4. **出画面**：`--stage video`（长任务放后台跑）。完成的段记在 `gen/state.json`，中断后重跑自动跳过；台词改了只重做那段。
+5. **检查**：每段抽帧看口型（停顿处闭嘴、结尾闭嘴）和人脸。
+6. **拼接**：`python3 scripts/assemble.py script.json ids.json --src 'gen/{id}.mp4'`，后面第 6、7 步照常（2026-11-12 在 WSL Ubuntu 上跑通：assemble → align → huazi-916 渲染 → 封面 → 首帧）。WSL 里先 `source ~/.venvs/koubo/bin/activate`（numpy / pillow / playwright / av 都装在这里）。配音本来就照稿念，`misread_check` / `patch_words` 一般用不上；`voicefx/unify.py` 只需轻处理。
+- 提示词是 H3 Ref2VA 格式（persona.json → comfy.prompt_template），每段存在 `gen/prompts/<id>.txt`。
+- **进场景**（直播间、门店、街景）：先 `python scripts/comfy_scene.py scenes.json --out scene`（Qwen Image 2.1 Image Edit，形象照当参考图合成开场画面，每张 2–5 分钟），再在 script.json 那几段加 `"ref": "scene/<id>.png"`，H3 就用这张图当参考。用场景图时提示词改用主播的 `look_person`（只写人物、不写布景），否则 `look` 里的默认演播室会把背景拉回去（2026-11-12 实测：暖白直播间被画成深蓝墙）；新主播记得补这个字段。四视图、贴纸四宫格也用它出。
+- **B-roll**：`python scripts/comfy_broll.py broll.json --out <工程>/public/broll [--stage plan]`（H3 文生 / 图生视频，5 秒一段约 5–6 分钟，`--mp 0.4` 更快；带招牌的街景会出乱码字，写成招牌虚化）。字段见脚本文件头。
+- **景深字抠像**：`cutout_video.py` 在非 macOS 上自动走 ComfyUI BiRefNet；**量脸**：`lin_scenes.py --face` 自动用 `face_center.py`（mediapipe）。
+- **BGM**：`python scripts/comfy_music.py --out <工程>/public/music/bgm.mp3 [--caption "…"] [--seed 8]`（MiniMax Music 3，纯音乐，60 秒约 1 分钟出）。模型会提前收尾：lyrics 里 `[Instrumental]` 标签越多越长（5 个约 37 秒），比成片短也没关系，lin_mix.py 会循环。出完用 `earshot describe bgm.mp3` 听一下：voice 类别分数要低（没有人声），看 genre/mood 对不对。
+- **earshot**：模型放本地文件夹时，`EARSHOT_CLAP` / `EARSHOT_AST` / `EARSHOT_HOME` / `EARSHOT_OFFLINE=1` 要写在 `~/.bashrc` 的「非交互就 return」那行**之前**，否则脚本里读不到，earshot 会去连 Hugging Face 卡住。`lin_sfx.py` 只用 `kit init/render`，不需要这两个模型。
+
 ## 参考
 - references/install.md：Renoise MCP 和本机环境的多种装法（只在缺的时候用）
 - references/style-menu.md：五种风格、内容诊断、怎么问用户、brief.json
