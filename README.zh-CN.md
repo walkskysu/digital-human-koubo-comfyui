@@ -47,6 +47,8 @@
 | **风格 D · 保姆级教程** · 16:9 · 44 秒<br>「三步做出本地数字人口播」：终端、时间线、步骤追踪<br>[▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4) | **风格 E · 双主播接力** · 16:9 · 37 秒<br>「双 11 先别急着付款：3 个坑」：两位主播、Qwen Image 场景、一句英文<br>[▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4) |
 
 > 主播全部是 AI 数字人（`assets/host_girl_*.png` 和声音样本都是 AI 生成的，不是真人），每条片子都标了「内容由 AI 数字人演绎」。原项目云端路线的示例在下面的[云端路线](#云端路线renoise-mcp可选)。
+>
+> 每条片子用的提示词（每种风格三段）见 [docs/local-prompts.zh-CN.md](docs/local-prompts.zh-CN.md)。
 
 ---
 
@@ -437,6 +439,28 @@ script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
 
 风格 A 只学解说频道的**结构和剪辑语法**，不用真实创作者的脸、声音、布景和原话。
 
+### 提示词示例（本地实跑）
+
+五条[本地成片](#本地路线成片示例)每种风格挑了三段，H3 提示词、场景图、B-roll 和配乐提示词都原样收在 **[docs/local-prompts.zh-CN.md](docs/local-prompts.zh-CN.md)**，点风格字母直接跳过去。主播段的提示词由 `comfy_batch.py` 按 `persona.json` 和 `script.json` 自动拼出来，一般不用手写，那份文档也讲了每个字段对应提示词的哪一部分。
+
+| 风格 | 段 · 主播 | 台词 | 看点 |
+|---|---|---|---|
+| [**A**](docs/local-prompts.zh-CN.md#style-a) | `s01` · `girl` | 存一笔钱，多久能翻一倍？有个特别好用的心算方法。 | 景深字开场，头顶和两侧留背景 |
+| [**A**](docs/local-prompts.zh-CN.md#style-a) | `s03` · `girl` | 比如年化百分之六，七十二除以六，等于十二，大约十二年翻一倍。 | 讲解段：点头、低头看屏幕 |
+| [**A**](docs/local-prompts.zh-CN.md#style-a) | `s06` · `girl` | 你的钱现在按什么速度在长？评论区聊聊。 | 结尾互动：看镜头、手势 |
+| [**B**](docs/local-prompts.zh-CN.md#style-b) | `b1` · `tank` | 一张照片，一台显卡，我做出了五种风格的口播视频。而且，一分钱接口费都没花。 | 竖屏自拍开场钩子 |
+| [**B**](docs/local-prompts.zh-CN.md#style-b) | `b5` · `tank` | 最惊艳的是口型：给它一张照片、一段配音，嘴型就自己对上了，不用抽卡。 | vlog 表演：歪头、点头、抬手 |
+| [**B**](docs/local-prompts.zh-CN.md#style-b) | `b8` · `tank` | 想要这套流程的，评论区扣一，我把步骤整理给你。 | 结尾要互动 |
+| [**C**](docs/local-prompts.zh-CN.md#style-c) | `c1` · `tank` | 文生图、图生视频，你都见过了。但今天这个模型，画面和声音是一起生成的。 | 一句话说清新在哪 |
+| [**C**](docs/local-prompts.zh-CN.md#style-c) | `c3` · `tank` | 最实用的是参考生视频：给它一张照片、一段配音，人物的口型就跟着配音走。 | 功能讲解 |
+| [**C**](docs/local-prompts.zh-CN.md#style-c) | `c5` · `tank` | 不花一分钱接口费，代价是电费和耐心。你会拿它做什么？评论区告诉我。 | 讲代价 + 抛问题 |
+| [**D**](docs/local-prompts.zh-CN.md#style-d) | `d1` · `girl` | 想做数字人口播，又不想花钱买接口？今天三步，在自己电脑上跑通。 | 痛点 + 「今天三步」 |
+| [**D**](docs/local-prompts.zh-CN.md#style-d) | `d2` · `girl` | 第一步，克隆声音。录一段十几秒的干声，交给千问的语音模型，再输入新台词，就能配出同一个声音。 | 步骤段（约 10 秒） |
+| [**D**](docs/local-prompts.zh-CN.md#style-d) | `d5` · `girl` | 整套流程不花一分接口费。想要完整的命令清单，评论区留言。 | 总结 + 留言领清单 |
+| [**E**](docs/local-prompts.zh-CN.md#style-e) | `e2` · `tank` | 第一个坑，分期免息。免的是利息，手续费可一分没少，先算清楚再下单。 | 第二位主播 `tank` 接棒 |
+| [**E**](docs/local-prompts.zh-CN.md#style-e) | `e3` · `girl` | 第二个坑，先涨价再打折。加购之前，记下最近三十天的价格，一对比就知道。 | Qwen Image 直播间场景图当参考 |
+| [**E**](docs/local-prompts.zh-CN.md#style-e) | `e4` · `tank` | Third trap: don't buy extra stuff just to hit the discount threshold. If you don't need it, it's not a deal. | 中途切英文 |
+
 ---
 
 ## 48 个包装组件
@@ -516,7 +540,7 @@ skills/
                                   host_girl_*.png · voice_ref_*.flac（本地路线主播）
   finance-explainer/              纯图表财经长片引擎（episode.json 拍表、检索工具）
 workflows/                        本地路线用到的 ComfyUI 工作流（界面格式），附与 API 文件的对照
-docs/                             README 用的图片、GIF 预览、封面帧
+docs/                             README 用的图片、GIF 预览、封面帧，本地路线提示词示例（local-prompts.zh-CN.md）
 ```
 
 ## 踩过的坑（Skill 里都处理了）

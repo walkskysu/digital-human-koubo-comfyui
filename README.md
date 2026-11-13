@@ -47,6 +47,8 @@ One short video per editing style, all made end to end with the local route on a
 | **Style D · Step-by-step tutorial** · 16:9 · 44 s<br>"Three steps to a local talking-head video" — terminal, timeline, step tracker<br>[▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4) | **Style E · Two-host relay** · 16:9 · 37 s<br>"3 traps on Double 11" — two presenters, a Qwen Image scene, one line in English<br>[▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4) |
 
 > All presenters are AI digital humans (`assets/host_girl_*.png` and the voice samples are AI-generated, not real people), and every video carries the label "内容由 AI 数字人演绎" (performed by an AI digital human). Demos of the original cloud route are further down under [Cloud route](#cloud-route-renoise-mcp-optional).
+>
+> The prompts behind each video (three segments per style) are in [docs/local-prompts.md](docs/local-prompts.md).
 
 ---
 
@@ -437,6 +439,28 @@ Style B has three caption intensities — **restrained / standard / lively**:
 
 Style A learns only the *structure and editing grammar* of popular explainer channels. It never uses a real creator's face, voice, set or lines.
 
+### Prompt examples (from local runs)
+
+Three segments per style from the five [local demos](#local-demos). The full H3 prompts, plus the scene, B-roll and music prompts, are copied verbatim into **[docs/local-prompts.md](docs/local-prompts.md)**; click a style letter to jump there. `comfy_batch.py` assembles presenter prompts from `persona.json` and `script.json`, so you rarely write them by hand; that page also maps each field to the part of the prompt it fills.
+
+| Style | Segment · host | Line | What it shows |
+|---|---|---|---|
+| [**A**](docs/local-prompts.md#style-a) | `s01` · `girl` | 存一笔钱，多久能翻一倍？有个特别好用的心算方法。 | Text-behind opening: headroom and background on both sides |
+| [**A**](docs/local-prompts.md#style-a) | `s03` · `girl` | 比如年化百分之六，七十二除以六，等于十二，大约十二年翻一倍。 | Explaining: nods, glances down at a screen |
+| [**A**](docs/local-prompts.md#style-a) | `s06` · `girl` | 你的钱现在按什么速度在长？评论区聊聊。 | Closing ask: eye contact, gestures |
+| [**B**](docs/local-prompts.md#style-b) | `b1` · `tank` | 一张照片，一台显卡，我做出了五种风格的口播视频。而且，一分钱接口费都没花。 | Vertical selfie opening hook |
+| [**B**](docs/local-prompts.md#style-b) | `b5` · `tank` | 最惊艳的是口型：给它一张照片、一段配音，嘴型就自己对上了，不用抽卡。 | Vlog acting: head tilts, nods, a hand gesture |
+| [**B**](docs/local-prompts.md#style-b) | `b8` · `tank` | 想要这套流程的，评论区扣一，我把步骤整理给你。 | Closing ask |
+| [**C**](docs/local-prompts.md#style-c) | `c1` · `tank` | 文生图、图生视频，你都见过了。但今天这个模型，画面和声音是一起生成的。 | What's new, in one line |
+| [**C**](docs/local-prompts.md#style-c) | `c3` · `tank` | 最实用的是参考生视频：给它一张照片、一段配音，人物的口型就跟着配音走。 | Feature explanation |
+| [**C**](docs/local-prompts.md#style-c) | `c5` · `tank` | 不花一分钱接口费，代价是电费和耐心。你会拿它做什么？评论区告诉我。 | The cost, then a question |
+| [**D**](docs/local-prompts.md#style-d) | `d1` · `girl` | 想做数字人口播，又不想花钱买接口？今天三步，在自己电脑上跑通。 | Pain point + "three steps today" |
+| [**D**](docs/local-prompts.md#style-d) | `d2` · `girl` | 第一步，克隆声音。录一段十几秒的干声，交给千问的语音模型，再输入新台词，就能配出同一个声音。 | Step segment (about 10 s) |
+| [**D**](docs/local-prompts.md#style-d) | `d5` · `girl` | 整套流程不花一分接口费。想要完整的命令清单，评论区留言。 | Recap + comment for the list |
+| [**E**](docs/local-prompts.md#style-e) | `e2` · `tank` | 第一个坑，分期免息。免的是利息，手续费可一分没少，先算清楚再下单。 | Second host `tank` takes over |
+| [**E**](docs/local-prompts.md#style-e) | `e3` · `girl` | 第二个坑，先涨价再打折。加购之前，记下最近三十天的价格，一对比就知道。 | Qwen Image livestream scene as the reference |
+| [**E**](docs/local-prompts.md#style-e) | `e4` · `tank` | Third trap: don't buy extra stuff just to hit the discount threshold. If you don't need it, it's not a deal. | Switches to English |
+
 ---
 
 ## 48 packaging components
@@ -516,7 +540,7 @@ skills/
                                   host_girl_*.png · voice_ref_*.flac (local-route presenters)
   finance-explainer/              chart-only finance long-form engine (episode.json beat sheet, research helpers)
 workflows/                        ComfyUI workflows (UI format) behind the local route, with a map to the API files
-docs/                             README images, GIF previews, posters
+docs/                             README images, GIF previews, posters, local-route prompt examples (local-prompts.md)
 ```
 
 ## Known pitfalls (all handled by the skill)
