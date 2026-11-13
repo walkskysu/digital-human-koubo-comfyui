@@ -148,6 +148,8 @@ script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
 
 ### ComfyUI 流程（`skills/digital-human-koubo/comfy/`）
 
+这些 API 文件对应的原始工作流（界面格式）放在 [`workflows/`](workflows/)，拖进 ComfyUI 就能手动跑。
+
 都是展平的 API 格式图。脚本读进来，填上文字 / 图片 / 音频 / 种子，通过 ComfyUI 的 REST API（`/upload`、`/prompt`、`/history`、`/view`）提交和取回。地址在 `persona.json` 的 `comfy.url`（默认 `http://127.0.0.1:8188`）。
 
 | 文件 | 谁在用 | 主要节点 | 模型文件 |
@@ -482,6 +484,7 @@ skills/
     assets/                       风格预览图 · 包装图鉴 · 数字人参考图
                                   host_girl_*.png · voice_ref_*.flac（本地路线主播）
   finance-explainer/              纯图表财经长片引擎（episode.json 拍表、检索工具）
+workflows/                        本地路线用到的 ComfyUI 工作流（界面格式），附与 API 文件的对照
 docs/                             README 用的图片、GIF 预览、封面帧
 ```
 

@@ -1,0 +1,378 @@
+{
+ "id": "3ca025f4-2a5a-439a-8d97-01bc53eae660",
+ "revision": 0,
+ "last_node_id": 39,
+ "last_link_id": 56,
+ "nodes": [
+  {
+   "id": 30,
+   "type": "Qwen3TTSLoader",
+   "pos": [
+    -935.0970085805842,
+    -908.1231417223206
+   ],
+   "size": [
+    409.789907914605,
+    182.50878434615026
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model_repo",
+     "name": "model_repo",
+     "type": "COMBO",
+     "widget": {
+      "name": "model_repo"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "download_source",
+     "name": "download_source",
+     "type": "COMBO",
+     "widget": {
+      "name": "download_source"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "precision",
+     "name": "precision",
+     "type": "COMBO",
+     "widget": {
+      "name": "precision"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "attn_mode",
+     "name": "attn_mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "attn_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "auto_download",
+     "name": "auto_download",
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "auto_download"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "model_obj",
+     "name": "model_obj",
+     "type": "QWEN3_MODEL",
+     "links": [
+      56
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "Qwen3TTSLoader"
+   },
+   "widgets_values": [
+    "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+    "ModelScope",
+    "bf16",
+    "sage_attention",
+    true
+   ],
+   "widgets_values_named": {
+    "model_repo": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+    "download_source": "ModelScope",
+    "precision": "bf16",
+    "attn_mode": "sage_attention",
+    "auto_download": true
+   }
+  },
+  {
+   "id": 32,
+   "type": "SaveAudio",
+   "pos": [
+    24.92407636415443,
+    -906.9898780482584
+   ],
+   "size": [
+    373.77197501998717,
+    131.38597335538225
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "音频",
+     "name": "audio",
+     "type": "AUDIO",
+     "link": 55
+    },
+    {
+     "localized_name": "文件名前缀",
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "音频UI",
+     "name": "audioUI",
+     "type": "AUDIO_UI",
+     "widget": {
+      "name": "audioUI"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "audio",
+     "name": "audio",
+     "type": "AUDIO",
+     "links": null
+    }
+   ],
+   "properties": {},
+   "widgets_values": [
+    "audio/ComfyUI"
+   ],
+   "widgets_values_named": {
+    "filename_prefix": "audio/ComfyUI"
+   }
+  },
+  {
+   "id": 38,
+   "type": "Qwen3TTSVoiceDesign",
+   "pos": [
+    -458.45677049765965,
+    -907.2854539880965
+   ],
+   "size": [
+    428.0075161796507,
+    554.0526132575545
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "localized_name": "model_obj",
+     "name": "model_obj",
+     "type": "QWEN3_MODEL",
+     "link": 56
+    },
+    {
+     "localized_name": "text",
+     "name": "text",
+     "type": "STRING",
+     "widget": {
+      "name": "text"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "voice_instruction",
+     "name": "voice_instruction",
+     "type": "STRING",
+     "widget": {
+      "name": "voice_instruction"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "language",
+     "name": "language",
+     "type": "COMBO",
+     "widget": {
+      "name": "language"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "output_mode",
+     "name": "output_mode",
+     "type": "COMBO",
+     "widget": {
+      "name": "output_mode"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "seed",
+     "name": "seed",
+     "type": "INT",
+     "widget": {
+      "name": "seed"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "max_new_tokens",
+     "name": "max_new_tokens",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "max_new_tokens"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "temperature",
+     "name": "temperature",
+     "shape": 7,
+     "type": "FLOAT",
+     "widget": {
+      "name": "temperature"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "top_p",
+     "name": "top_p",
+     "shape": 7,
+     "type": "FLOAT",
+     "widget": {
+      "name": "top_p"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "top_k",
+     "name": "top_k",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "top_k"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "repetition_penalty",
+     "name": "repetition_penalty",
+     "shape": 7,
+     "type": "FLOAT",
+     "widget": {
+      "name": "repetition_penalty"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "subtalker_temperature",
+     "name": "subtalker_temperature",
+     "shape": 7,
+     "type": "FLOAT",
+     "widget": {
+      "name": "subtalker_temperature"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "subtalker_top_p",
+     "name": "subtalker_top_p",
+     "shape": 7,
+     "type": "FLOAT",
+     "widget": {
+      "name": "subtalker_top_p"
+     },
+     "link": null
+    },
+    {
+     "localized_name": "subtalker_top_k",
+     "name": "subtalker_top_k",
+     "shape": 7,
+     "type": "INT",
+     "widget": {
+      "name": "subtalker_top_k"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "localized_name": "音频",
+     "name": "AUDIO",
+     "type": "AUDIO",
+     "links": [
+      55
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "Qwen3TTSVoiceDesign"
+   },
+   "widgets_values": [
+    "哥哥，你回来啦，人家等了[p:1.5]你好久好久了，要抱抱！\nIt's in the top drawer... wait, it's empty?",
+    "体现撒娇稚嫩的萝莉女声，音调偏高且起伏明显，营造出黏人、做作又刻意卖萌的听觉效果。\nSpeak in an incredulous tone, but with a hint of panic.",
+    "Chinese",
+    "Concatenate (Merge)",
+    1111064477408660,
+    "randomize",
+    1024,
+    0.7,
+    0.8,
+    50,
+    1.05,
+    0.9,
+    1,
+    50
+   ],
+   "widgets_values_named": {
+    "text": "哥哥，你回来啦，人家等了[p:1.5]你好久好久了，要抱抱！\nIt's in the top drawer... wait, it's empty?",
+    "voice_instruction": "体现撒娇稚嫩的萝莉女声，音调偏高且起伏明显，营造出黏人、做作又刻意卖萌的听觉效果。\nSpeak in an incredulous tone, but with a hint of panic.",
+    "language": "Chinese",
+    "output_mode": "Concatenate (Merge)",
+    "seed": 1111064477408660,
+    "control_after_generate": "randomize",
+    "max_new_tokens": 1024,
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 50,
+    "repetition_penalty": 1.05,
+    "subtalker_temperature": 0.9,
+    "subtalker_top_p": 1,
+    "subtalker_top_k": 50
+   }
+  }
+ ],
+ "links": [
+  [
+   55,
+   38,
+   0,
+   32,
+   0,
+   "AUDIO"
+  ],
+  [
+   56,
+   30,
+   0,
+   38,
+   0,
+   "QWEN3_MODEL"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 1.216265308115871,
+   "offset": [
+    1170.7291852413719,
+    1138.2867002826156
+   ]
+  },
+  "frontendVersion": "1.38.11",
+  "workflowRendererVersion": "LG"
+ },
+ "version": 0.4
+}

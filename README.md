@@ -148,6 +148,8 @@ side jobs:   comfy_scene.py  (Qwen Image 2.1 t2i, host photo as reference: lives
 
 ### ComfyUI workflows (`skills/digital-human-koubo/comfy/`)
 
+The original UI-format workflows these were made from are in [`workflows/`](workflows/) — drag one into ComfyUI to run it by hand.
+
 Flattened API-format graphs. The scripts load them, fill in text / images / audio / seed and submit them to ComfyUI's REST API (`/upload`, `/prompt`, `/history`, `/view`). The address is `comfy.url` in `persona.json` (default `http://127.0.0.1:8188`).
 
 | File | Used by | Main nodes | Model files |
@@ -482,6 +484,7 @@ skills/
     assets/                       style previews · packaging gallery · avatar reference
                                   host_girl_*.png · voice_ref_*.flac (local-route presenters)
   finance-explainer/              chart-only finance long-form engine (episode.json beat sheet, research helpers)
+workflows/                        ComfyUI workflows (UI format) behind the local route, with a map to the API files
 docs/                             README images, GIF previews, posters
 ```
 
