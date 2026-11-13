@@ -1,6 +1,6 @@
 ---
 name: digital-human-koubo
-description: 用固定的数字人形象（白背心数字人 / 用户本人数字人 / 猫狗角色）做口播视频，先按内容推荐剪辑风格让用户选（小林式解说 / 网红花字口播 / 发布解读 / 保姆级教程 / 多主播多语言），自动套上从 MrBeast、MKBHD、影视飓风、Johnny Harris、Vox、半佛、差评等头部博主拆出来的 48 个包装组件（开场钩子、数字钉子、文字在人身后的景深字、证据截图、地图路线、弹幕、投票、复盘板…），再写稿 → 按 15 秒切段 → Renoise Grok Video 1.5 分段生成（先报价、用户确认才生成）→ 分片下载校验 → 逐段回听 → 对齐 → Remotion 剪辑出片 → 默认做封面（16:9 / 9:16 / 3:4）并接成成片首帧。触发：用我的数字人讲这段、数字人口播、让白背心数字人说、用数字人 Skill、数字人带货 / 解读 / 教程 / 种草视频、做成小林说那样、加花字、加包装 / 加地图 / 加弹幕 / 开场加预告 / 文字放在人身后、做成 MrBeast 那种节奏、有哪些包装手法。不用于：换一个全新形象（先按 references/new-avatar.md 做形象）、冒充真人。
+description: 用固定的数字人形象（白背心数字人 / 用户本人数字人 / 猫狗角色）做口播视频。生成有两条路线：本地 ComfyUI（Qwen3-TTS 克隆配音 → MiniMax H3 照着配音对口型，Qwen Image 场景图、Music 3 配乐，不花积分；检测到 127.0.0.1:8188 就默认走本地）或云端 Renoise Grok Video 1.5（先报价、用户确认才生成）。先按内容推荐剪辑风格让用户选（小林式解说 / 网红花字口播 / 发布解读 / 保姆级教程 / 多主播多语言），自动套上从 MrBeast、MKBHD、影视飓风、Johnny Harris、Vox、半佛、差评等头部博主拆出来的 48 个包装组件（开场钩子、数字钉子、文字在人身后的景深字、证据截图、地图路线、弹幕、投票、复盘板…），再写稿 → 切段 → 生成 → 逐段回听 → 对齐 → Remotion 剪辑出片 → 默认做封面（16:9 / 9:16 / 3:4）并接成成片首帧。触发：用本地 ComfyUI 做口播、本地数字人口播、不花积分做口播、用开源模型做数字人、用我的数字人讲这段、数字人口播、让白背心数字人说、用数字人 Skill、数字人带货 / 解读 / 教程 / 种草视频、做成小林说那样、加花字、加包装 / 加地图 / 加弹幕 / 开场加预告 / 文字放在人身后、做成 MrBeast 那种节奏、有哪些包装手法。不用于：换一个全新形象（先按 references/new-avatar.md 做形象）、冒充真人。
 ---
 
 # 数字人口播
@@ -8,7 +8,7 @@ description: 用固定的数字人形象（白背心数字人 / 用户本人数�
 形象、声音、提示词、切段规则固定在 `persona.json`；剪辑风格在 `references/style-menu.md`。每次照这里做，出来的就是同一个人、同一种风格。
 
 ## 红线
-- 生成花用户的 Renoise credits：create_tasks 之前先报「段数 · 秒数 · 预估 credits · 余额」，等用户在对话里明确同意。先拍第 1 段给用户确认音色，再批量。重拍也要先报价。
+- 云端路线生成花用户的 Renoise credits：create_tasks 之前先报「段数 · 秒数 · 预估 credits · 余额」，等用户在对话里明确同意。先拍第 1 段给用户确认音色，再批量。重拍也要先报价。本地路线不花钱但占 GPU，开跑前同样报「段数 · 秒数 · 预估 GPU 时间」等用户同意。
 - 成片标「内容由 AI 数字人演绎」；场景、动物片段、B-roll 角上标「AI 生成」。用户明确要去掉画面标注时照做，但要提醒：公开发布时在平台发布页勾选「AI 生成」声明。
 - 用户本人的形象（persona.json → other_hosts.me）只用在用户自己的片子里。
 - 「小林式」只学结构和剪辑手法：不用真实创作者的脸、声音、布景和原句。
@@ -18,7 +18,13 @@ description: 用固定的数字人形象（白背心数字人 / 用户本人数�
 
 ### 准备：先检查，有就跳过，缺才引导安装（每次新对话第一次用时做）
 **原则：已经装好的一句话带过，不让用户重装；缺什么才给装法，装法给多种，先放用户当前用的那种。** 详细装法在 references/install.md。
-1. **Renoise MCP**：直接调 `get_account`。
+0. **选生成路线（先做这一步）**：
+   - 用户已经点名路线（「用本地 ComfyUI / 开源模型 / 不花积分」→ 本地；「用 Renoise / Grok / 云端」→ 云端）→ 照用户说的走，不再问。本地路线照样做下面的 8188 检查，连不上就停下告诉用户先启动 ComfyUI。
+   - 没点名 → 先检查本地 ComfyUI：`curl -s -m 5 http://127.0.0.1:8188/system_stats`（地址以 persona.json → `comfy.url` 为准）。
+     - 能连上 → **默认走本地路线**，只说一句「检测到本地 ComfyUI（版本 X，显卡 Y），默认用本地生成，不花积分；想用 Renoise 云端说一声」，不用问，接着干活。后面按「本地 ComfyUI 路线」一节做，不用检查 Renoise。
+     - 连不上 → 问用户用哪种方式做视频（Claude Code 用 AskUserQuestion，其他工具列编号）：①本地 ComfyUI（不花积分，要先启动 ComfyUI，需要 24 GB 左右显存，装法见 references/install.md / README）②Renoise 云端（花积分，按下面第 1 步检查连接）。用户选了本地就等他启动 ComfyUI 后再测一次 8188。
+   - 选定的路线写进 `brief.json` 的 `"route": "local"` / `"cloud"`，后面每一步按它来。
+1. **Renoise MCP**（只在云端路线时检查）：直接调 `get_account`。
    - 成功 → 只说一句「Renoise 已连接，余额 X 积分」，接着干活。
    - 工具不存在 / 未连接 → 停下引导安装。用户还没有 Renoise 账号时，注册链接一律给 https://renoise.ai/mcp?utm_medium=xcom&utm_source=official（原样给出，保留 utm 追踪参数，不要改写成 renoise.ai 首页）。然后把用户当前客户端的装法放第一个并标「推荐」，下面列出其他方式（Claude 桌面端/网页连接器、Claude Code 插件、Codex `codex mcp add`、OpenClaw、Cursor 等通用远程 MCP 配置、renoise.ai/plugin 官网），让用户自己挑。装完让用户重开对话或重连，再调一次确认。
    - 报工具被关闭 → 不是没装，让用户去连接器设置里打开；报授权过期 → 重新登录授权，不用重装。
@@ -100,7 +106,7 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 4. `python3 scripts/cover_first.py 成片.mp4 cover/cover_<比例>.jpg 交付.mp4`：封面停 0.5 秒后硬切进正片，声音整体后推 0.5 秒。抽 0 秒、0.45 秒、0.55 秒三帧确认。不带封面的版本另存为 `_无封面.mp4`。
 
 ## 本地 ComfyUI 路线（不花 Renoise 积分，替换第 2–5 步）
-用户说「用本地 ComfyUI / 开源模型 / 不花积分」时走这条。先配音再出画面：Qwen3-TTS 克隆配音 → MiniMax H3 参考生视频（配音当 `<Audio 1>` fully_copy，口型跟着配音走）→ 把原配音合回画面。配置在 persona.json → `comfy`，流程 JSON 在 `comfy/`。
+准备阶段第 0 步选了本地路线时走这条（用户点名本地，或没点名但 8188 能连上）。先配音再出画面：Qwen3-TTS 克隆配音 → MiniMax H3 参考生视频（配音当 `<Audio 1>` fully_copy，口型跟着配音走）→ 把原配音合回画面。配置在 persona.json → `comfy`，流程 JSON 在 `comfy/`。
 1. **检查**：ComfyUI 能连上（`curl -s 127.0.0.1:8188/system_stats`），有 Qwen3-TTS 节点包和 H3 ref2va 模型 + 4 步 Lightning LoRA。主播要有 `voice_ref`（12–20 秒干声 + 逐字文本）。
 2. **估时**：`python scripts/comfy_batch.py script.json --stage plan`（用 `~/.venvs/comfy-mcp/bin/python`，要 PyAV）。不花钱但占 GPU：10 秒一段约 8 分钟（RTX 3090，672×1216，4 步），报给用户。
 3. **配音**：`--stage tts`。每段配完自动用 SenseVoice 不带原文回听，准确率 < 90% 打 ⚠；念错就在 script.json 那段加 `"seed": 新数` 再跑（只重配这一段）。单段超过 14 秒报错：拆短台词。先让用户听第 1 段确认音色。
