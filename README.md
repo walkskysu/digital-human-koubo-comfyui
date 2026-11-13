@@ -233,11 +233,51 @@ A ~40-second finished video (5–8 presenter segments) takes roughly 40–70 min
 
 ## Quick start
 
-Talk to your agent in plain language:
+Talk to your agent in plain language. Below are a few requests per editing style; the first one in each group is how the matching [local demo](#local-demos) was made. Saying "local ComfyUI" picks the local route; if you don't, the skill still defaults to local when 127.0.0.1:8188 is up.
+
+**A · Explainer** (16:9, finance / tech events)
 
 ```text
-用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。
+Use local ComfyUI for a Xiaolin-style explainer on the rule of 72 (how long until your money doubles), 16:9, 35 seconds. Open with text behind the presenter, put the worked example on a board with a presenter window, host girl.
+Use local ComfyUI: explain compound vs. simple interest in the Xiaolin style, 1 minute, with two B-roll shots in the middle.
+Make a local explainer: why does a 1% annual fee eat a third of your returns? Add comparison bars and a worked example, and generate the BGM with MiniMax Music.
+```
+
+**B · Influencer talking head with animated captions** (9:16, picks / reviews / rants)
+
+```text
+Use local ComfyUI for a 9:16 captioned talking head, host tank, 45 seconds: five talking-head styles from one photo and one GPU, lively captions.
 Use local ComfyUI: a 40-second 9:16 talking-head video about the rule of 72, with animated captions.
+Make a local 30-second vertical review: I've used these noise-cancelling earbuds for three months, three pros and one con, standard captions, end by asking viewers to comment.
+```
+
+**C · Launch breakdown** (16:9, new products / models)
+
+```text
+Use local ComfyUI for a launch breakdown: MiniMax H3 is open source and generates picture and sound together, 40 seconds, presenter at the side, with spec cards.
+Make a local 45-second launch breakdown: Qwen3-TTS clones a voice from a dozen seconds of audio; three highlights and one limitation.
+This model just launched. Use local ComfyUI for a 1-minute breakdown: what's new in one line, three key specs, measured speed, and who it's for.
+```
+
+**D · Step-by-step tutorial** (16:9, "how to…")
+
+```text
+Use local ComfyUI for a step-by-step tutorial: make a talking-head video on your own PC in three steps (clone the voice → generate the video → edit), 16:9, 45 seconds, host girl.
+Make a local tutorial: installing the Lightning LoRA in ComfyUI in four steps, with terminal footage and a step tracker for each.
+Make a 1-minute local tutorial teaching beginners to change the presenter's background with Qwen Image, with a timeline and numbered steps.
+```
+
+**E · Multi-host · multi-language · multi-scene** (16:9, relays / going global)
+
+```text
+用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。 (local ComfyUI, no credits: two hosts take turns on three Singles' Day shopping traps)
+girl and tank take turns on three renting traps: put girl in a Qwen Image apartment-complex scene for the second one, and have tank do the third in English.
+A bilingual product intro: girl opens in Chinese, tank covers three selling points in English, girl wraps up, 16:9, 50 seconds.
+```
+
+**General**
+
+```text
 用我的数字人 Skill 讲这段：……（paste your content）
 Generate the BGM with MiniMax Music and redo the sound effects with earshot.
 Add a map route when she mentions these countries. / Put "¥99" behind her. / Add a teaser cold open.
