@@ -7,6 +7,8 @@ Script, lip-synced AI presenter, voice clean-up, captions, and pro-YouTuber-styl
 
 **English** · [简体中文](README.zh-CN.md)
 
+<sub>Based on <a href="https://github.com/andyhuo520/digital-human-koubo">andyhuo520/digital-human-koubo</a> by Berryxia — this version adds a fully local ComfyUI route.</sub>
+
 [![License: MIT](https://img.shields.io/badge/license-MIT-black.svg)](LICENSE)
 ![Agent Skill](https://img.shields.io/badge/Agent%20Skill-SKILL.md-orange)
 [![Renoise MCP](https://img.shields.io/badge/video-Renoise%20MCP-ff7a1a)](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official)
@@ -21,7 +23,7 @@ Script, lip-synced AI presenter, voice clean-up, captions, and pro-YouTuber-styl
 > The only input was one sentence: *"Use this digital human to make a 30-second livestream ad for the WorkBuddy course — 10 lessons, ¥99, was ¥999."*
 > Total cost: **482 [Renoise](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official) credits**.
 
-> **New in this fork — a fully local route.** Everything that used to be generated in the cloud — voice, lip-synced presenter, scene images, B-roll, background music, person cutout — can now run on your own GPU through **[ComfyUI](https://github.com/comfyanonymous/ComfyUI)**, with no credits and no API keys: **Qwen3-TTS** voice cloning → **MiniMax H3** audio-driven lip sync → **Qwen Image 2.1** scenes → **MiniMax Music 3** BGM → **earshot** sound design. All five editing styles have been produced end-to-end on one RTX 3090. See [Architecture](#architecture) and [Local ComfyUI setup](#3b--or-run-generation-locally-with-comfyui-no-credits).
+> **New in this version — a fully local route.** Everything that used to be generated in the cloud — voice, lip-synced presenter, scene images, B-roll, background music, person cutout — can now run on your own GPU through **[ComfyUI](https://github.com/comfyanonymous/ComfyUI)**, with no credits and no API keys: **Qwen3-TTS** voice cloning → **MiniMax H3** audio-driven lip sync → **Qwen Image 2.1** scenes → **MiniMax Music 3** BGM → **earshot** sound design. All five editing styles have been produced end-to-end on one RTX 3090. See [Architecture](#architecture) and [Local ComfyUI setup](#3b--or-run-generation-locally-with-comfyui-no-credits).
 
 ---
 
@@ -200,7 +202,7 @@ git clone https://github.com/walkskysu/digital-human-koubo-comfyui.git
 cd digital-human-koubo-comfyui
 ```
 
-This is a fork of [andyhuo520/digital-human-koubo](https://github.com/andyhuo520/digital-human-koubo) with the local ComfyUI route added.
+This project is based on [andyhuo520/digital-human-koubo](https://github.com/andyhuo520/digital-human-koubo) and adds the local ComfyUI route.
 
 ### 2 · Install the two skills into your agent
 

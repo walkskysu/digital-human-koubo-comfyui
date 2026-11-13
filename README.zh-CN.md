@@ -7,6 +7,8 @@
 
 [English](README.md) · **简体中文**
 
+<sub>基于 Berryxia 的 <a href="https://github.com/andyhuo520/digital-human-koubo">andyhuo520/digital-human-koubo</a>，本版本新增全本地 ComfyUI 路线。</sub>
+
 [![License: MIT](https://img.shields.io/badge/license-MIT-black.svg)](LICENSE)
 ![Agent Skill](https://img.shields.io/badge/Agent%20Skill-SKILL.md-orange)
 [![Renoise MCP](https://img.shields.io/badge/video-Renoise%20MCP-ff7a1a)](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official)
@@ -21,7 +23,7 @@
 > 输入只有一句话：「用这个数字人做一条 30 秒直播间广告，卖 WorkBuddy 上手课，10 节课 99 元，原价 999。」
 > 总共花了 **482 [Renoise](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official) 积分**。
 
-> **这个分支新增：全本地路线。** 原来要在云端生成的配音、对口型主播、场景图、B-roll、配乐、人像抠图，现在都能用你自己的显卡通过 **[ComfyUI](https://github.com/comfyanonymous/ComfyUI)** 跑，不花积分、不要 API Key：**Qwen3-TTS** 克隆配音 → **MiniMax H3** 用配音驱动口型 → **Qwen Image 2.1** 出场景 → **MiniMax Music 3** 出配乐 → **earshot** 做音效。五种剪辑风格都已在一张 RTX 3090 上从头做到成片。见[架构](#架构)和[本地 ComfyUI 安装](#3b--或者用本地-comfyui-生成不花积分)。
+> **本版本新增：全本地路线。** 原来要在云端生成的配音、对口型主播、场景图、B-roll、配乐、人像抠图，现在都能用你自己的显卡通过 **[ComfyUI](https://github.com/comfyanonymous/ComfyUI)** 跑，不花积分、不要 API Key：**Qwen3-TTS** 克隆配音 → **MiniMax H3** 用配音驱动口型 → **Qwen Image 2.1** 出场景 → **MiniMax Music 3** 出配乐 → **earshot** 做音效。五种剪辑风格都已在一张 RTX 3090 上从头做到成片。见[架构](#架构)和[本地 ComfyUI 安装](#3b--或者用本地-comfyui-生成不花积分)。
 
 ---
 
@@ -200,7 +202,7 @@ git clone https://github.com/walkskysu/digital-human-koubo-comfyui.git
 cd digital-human-koubo-comfyui
 ```
 
-这是 [andyhuo520/digital-human-koubo](https://github.com/andyhuo520/digital-human-koubo) 的分支，加了本地 ComfyUI 路线。
+本项目基于 [andyhuo520/digital-human-koubo](https://github.com/andyhuo520/digital-human-koubo)，加了本地 ComfyUI 路线。
 
 ### 2 · 把两个 Skill 装进你的 Agent
 
