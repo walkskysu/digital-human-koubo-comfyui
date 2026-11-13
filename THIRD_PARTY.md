@@ -25,12 +25,14 @@ Models for the local route / 本地路线用到的模型 — downloaded by you i
 | MiniMax H3 image/text-to-video (`minimax_h3_fl2va_*`) + 8-step Lightning LoRA | B-roll | `comfy/h3_i2v.api.json` · `comfy_broll.py` |
 | H3 text encoder `qwen3vl_32b_minimax_h3_nvfp4_awq`, H3 video / audio VAEs | H3 | both H3 workflows |
 | MiniMax Music 3 (DiT, text encoder, `minimax_music3_dav`) | background music | `comfy/music.api.json` · `comfy_music.py` |
-| Qwen Image 2.1 + `qwen3vl_8b` text encoder + VAE | scene images, 4-view sheets, stickers | `comfy/qwen_edit.api.json` · `comfy_scene.py` |
+| Qwen Image 2.1 + `qwen3vl_8b` text encoder + VAE | scene images, 4-view sheets, stickers | `comfy/qwen_t2i.api.json` · `comfy_scene.py` |
 | [Qwen3-TTS 12Hz 1.7B Base](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-Base) | voice cloning — clone only voices you own or are licensed to use | `comfy/tts_clone.api.json` · `comfy_batch.py` |
 | [SenseVoice Small](https://huggingface.co/FunAudioLLM/SenseVoiceSmall) (`iic/SenseVoiceSmall`) | transcribing each TTS line to catch misreads | `comfy_batch.py` |
 | BiRefNet (`birefnet.safetensors`) | person cutout for text-behind-presenter | `cutout_video.py` |
 | [CLAP `laion/larger_clap_general`](https://huggingface.co/laion/larger_clap_general), [AST `MIT/ast-finetuned-audioset-10-10-0.4593`](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593) | `earshot describe` (genre / vocal check of generated BGM) | earshot |
 
+
+The local-route sample presenters `assets/host_girl_*.png` and voice samples `assets/voice_ref_*.flac` are AI-generated; they are not photos or recordings of real people. 本地路线的示例主播图和声音样本均为 AI 生成，不是真人照片或录音。
 
 Services you connect with your own account / 需要你自己账号的服务:
 - [Renoise](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official) — image & video generation (Grok Video, Wan, GPT Image, Seedance, …) through MCP. Usage is billed to your Renoise credits.

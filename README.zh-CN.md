@@ -124,7 +124,7 @@ script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
                                                提示词用 H3 Ref2VA 格式 → gen/prompts/<id>.txt
                                                进度存 gen/state.json（可续跑，只重做改过的段）
             ─► assemble.py --src 'gen/{id}.mp4' → align.py → tl.json → Remotion → 响度 → 封面
-旁支任务：   comfy_scene.py  （Qwen Image 2.1 图像编辑：把主播放进直播间 / 门店 / 街景，四视图，贴纸）
+旁支任务：   comfy_scene.py  （Qwen Image 2.1 文生图，主播照当参考图：直播间 / 门店 / 街景，四视图，贴纸）
              comfy_broll.py  （H3 文生 / 图生视频 B-roll，16:9）
              comfy_music.py  （MiniMax Music 3 纯音乐配乐 → 用 `earshot describe` 检查）
              cutout_video.py （BiRefNet 抠像，Linux / Windows 上做景深字）
@@ -138,7 +138,7 @@ script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
 | 配音 | Grok 原生声音 · 可选小米 MiMo TTS | **Qwen3-TTS 1.7B Base** 声音克隆 | `comfy_batch.py --stage tts` |
 | 配音质检 | whisper.cpp | **SenseVoice Small**（在 ComfyUI 里）+ whisper.cpp | `comfy_batch.py`、`misread_check.py` |
 | 主播画面 | Grok Video 1.5（Renoise） | **MiniMax H3 Ref2VA** + 4 步 Lightning LoRA | `build_tasks.py` / `comfy_batch.py --stage video` |
-| 场景图、四视图、贴纸 | GPT Image 2.5（Renoise） | **Qwen Image 2.1** 图像编辑 | `comfy_scene.py` |
+| 场景图、四视图、贴纸 | GPT Image 2.5（Renoise） | **Qwen Image 2.1**（主播照当参考图） | `comfy_scene.py` |
 | B-roll | Wan 3.0（Renoise） | **MiniMax H3** T2VA / I2VA + 8 步 Lightning LoRA | `comfy_broll.py` |
 | 配乐 | `make_assets.py` 占位曲 | **MiniMax Music 3** | `comfy_music.py` |
 | 音效 | `make_assets.py`（代码合成）/ **earshot** 音效包 | **earshot** 音效包 | `lin_sfx.py` |
@@ -155,14 +155,14 @@ script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
 | `tts_clone.api.json` | `comfy_batch.py` | `Qwen3TTSLoader` · `Qwen3TTSVoiceClonePrompt` · `Qwen3TTSVoiceClone` | `Qwen/Qwen3-TTS-12Hz-1.7B-Base`（节点包自动下载） |
 | `h3_r2v_audio.api.json` | `comfy_batch.py` | `MiniMaxH3ReferenceToVideo` · `SamplerCustomAdvanced` · `CreateVideo` | `minimax_h3_ref2va_pruned_int8_convrot` · LoRA `minimax_h3_ref2v_turbo_4step_v0.1` · 文本编码器 `qwen3vl_32b_minimax_h3_nvfp4_awq` · VAE `minimax_h3_video_vae_int8_convrot`、`minimax_h3_audio_vae_fp32` |
 | `h3_i2v.api.json` | `comfy_broll.py` | `MiniMaxH3ImageToVideo` | `minimax_h3_fl2va_pruned_int8_convrot` · LoRA `minimax_h3_fl2v_turbo_8step_v1.0` · 文本编码器和 VAE 同上 |
-| `qwen_edit.api.json` | `comfy_scene.py` | `TextEncodeQwenImage21` · `QwenImage21Cache` | `qwen_image_2.1_int8_convrot` · `qwen3vl_8b_int8_convrot` · `qwen_image_2.1_vae_bf16` |
+| `qwen_t2i.api.json` | `comfy_scene.py` | `TextEncodeQwenImage21` · `QwenImage21Cache` · 可选提示词增强 `TextGenerate` | `qwen_image_2.1_int8_convrot` · `qwen3vl_8b_int8_convrot` · `qwen_image_2.1_vae_bf16` · 增强器 `qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot`（只在 `--enhance` 时用） |
 | `music.api.json` | `comfy_music.py` | `MiniMaxMusic3TextEncode` · `EmptyMiniMaxMusic3LatentAudio` · `KSampler` | `minimax_music3_dit_fp16` · `minimax_music3_text_encoder_pruned_int8_convrot` · `minimax_music3_dav` |
 | *（脚本里拼）* | `cutout_video.py` | `LoadBackgroundRemovalModel` · `RemoveBackground` | `birefnet.safetensors` |
 | *（脚本里拼）* | `comfy_batch.py` | `Qwen3TTSSenseVoiceASR` | `iic/SenseVoiceSmall`（节点包自动下载） |
 
 ### 本地路线的主播
 
-`persona.json → comfy.hosts` 定义每个本地主播：照片（`avatar`）、输出尺寸、声音样本（`voice_ref` + `voice_ref_text`）、给提示词用的英文外形描述（`look`；另有只写人物、不写布景的 `look_person`，配场景图时用）、声音描述、默认构图。自带两个：`tank`（默认的白背心主播，`assets/avatar_ref.jpg`）和 `girl`（`assets/host_girl_*.png`）。H3 提示词模板在 `comfy.prompt_template`（Ref2VA 格式：subject_definitions / summary / retention_analysis / detailed_description / soundscape / music）。
+`persona.json → comfy.hosts` 定义每个本地主播：照片（`avatar`）、输出尺寸、声音样本（`voice_ref` + `voice_ref_text`）、给提示词用的英文外形描述（`look`；另有只写人物、不写布景的 `look_person`，配场景图时用）、声音描述、默认构图。自带两个：`tank`（默认的白背心主播，`assets/avatar_ref.jpg`）和 `girl`（`assets/host_girl_*.png`）。`girl` 的形象图和两个声音样本（`assets/voice_ref_*.flac`）都是 AI 生成的，不是真人。H3 提示词模板在 `comfy.prompt_template`（Ref2VA 格式：subject_definitions / summary / retention_analysis / detailed_description / soundscape / music）。
 
 ---
 
@@ -253,13 +253,14 @@ cd skills && zip -r ../digital-human-skills.zip digital-human-koubo finance-expl
 | | `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` | B-roll 8 步 |
 | `text_encoders/` | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | H3 |
 | | `qwen3vl_8b_int8_convrot.safetensors` | Qwen Image 2.1 |
+| | `qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot.safetensors` | Qwen Image 2.1 提示词增强（可选，`--enhance`） |
 | | `minimax_music3_text_encoder_pruned_int8_convrot.safetensors` | Music 3 |
 | `vae/` | `minimax_h3_video_vae_int8_convrot.safetensors`、`minimax_h3_audio_vae_fp32.safetensors` | H3 |
 | | `qwen_image_2.1_vae_bf16.safetensors` | Qwen Image 2.1 |
 | | `minimax_music3_dav.safetensors` | Music 3 |
 | `background_removal/` | `birefnet.safetensors` | 景深字抠像 |
 
-最省事的办法是在 ComfyUI 里打开对应模板（*MiniMax H3 Reference to Video*、*MiniMax H3 Image to Video*、*Qwen Image 2.1 Edit*、*MiniMax Music 3*），缺模型时它会提示下载。如果你那边文件名不一样，改 `skills/digital-human-koubo/comfy/` 下的 JSON 即可。
+最省事的办法是在 ComfyUI 里打开对应模板（*MiniMax H3 Reference to Video*、*MiniMax H3 Image to Video*、*Qwen Image 2.1 Text to Image*、*MiniMax Music 3*），缺模型时它会提示下载。如果你那边文件名不一样，改 `skills/digital-human-koubo/comfy/` 下的 JSON 即可。
 
 **Python 环境**（Skill 跑的那台机器）：
 ```bash
@@ -448,7 +449,7 @@ python3 scripts/cutout_video.py public/main.mp4 public/main_cut_s4.webm --from 1
 |---|---|---|
 | 克隆配音（Qwen3-TTS） | 一句 5–14 秒 | 几秒 |
 | 主播一段（H3 Ref2VA） | 10 秒，672×1216 或 1216×672，4 步 | 约 8 分钟（4–9 分钟） |
-| 场景图（Qwen Image 2.1 编辑） | 25 步 | 2–5 分钟 |
+| 场景图（Qwen Image 2.1） | 25 步 | 25–50 秒（第一张含加载最多约 5 分钟） |
 | B-roll（H3 T2VA / I2VA） | 5 秒，1216×672，8 步 | 5–6 分钟 |
 | 配乐（MiniMax Music 3） | 35–50 秒纯音乐，30 步 | 1–2 分钟 |
 
@@ -464,7 +465,7 @@ skills/
     SKILL.md                      Agent 照着执行的流程
     persona.json                  主播形象、声音描述、提示词模板
                                   （comfy：本地路线配置、主播的 voice_ref / look / look_person、H3 提示词模板）
-    comfy/                        ComfyUI API 流程：tts_clone · h3_r2v_audio · h3_i2v · qwen_edit · music
+    comfy/                        ComfyUI API 流程：tts_clone · h3_r2v_audio · h3_i2v · qwen_t2i · music
     references/                   风格菜单 · 包装组件 · 手法库 · 安装 · 拆解报告
     scripts/                      build_tasks · rangedl · assemble · align · check_edit · cutout_video
                                   voicefx/unify · doctor · new_edit · make_assets

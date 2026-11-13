@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
-"""场景图 / 四视图 / 贴纸（本地 ComfyUI · Qwen Image 2.1 Image Edit，替代 GPT Image 2.5）。
-用法：python3 comfy_scene.py scenes.json --out <目录> [--only open] [--redo open] [--steps 25] [--seed 3]
+"""场景图 / 四视图 / 贴纸（本地 ComfyUI · Qwen Image 2.1，替代 GPT Image 2.5）。
+流程：comfy/qwen_t2i.api.json（由 ComfyUI 里的 image_qwen_image_2_1_t2i 展平）；有 refs 时脚本给 TextEncodeQwenImage21 接上参考图和 VAE（同官方 image_edit 接法）。
+用法：python3 comfy_scene.py scenes.json --out <目录> [--only open] [--redo open] [--steps 25] [--seed 3] [--enhance]
 
 scenes.json：[{"id": "open", "prompt": "…", "refs": ["../assets/avatar_ref.jpg", "可选第二张参考.png"], "ratio": "9:16"}, …]
 - refs：参考图（最多 10 张，路径相对 scenes.json），提示词里按顺序叫 Picture 1 / Picture 2…；不写就是纯文生图
+- enhance：true 时先用 Qwen3.5 9B 提示词增强（pe_t2i）改写提示词再出图，也可以命令行 --enhance 全开。增强器看不到参考图，有 refs 的场景会忽略它；多花约 1 分钟、多占显存
 - ratio：9:16（736×1312）/ 16:9（1312×736）/ 3:4（864×1152）/ 4:3 / 1:1（1024×1024），默认 9:16
 - prompt：直接写要的结果，例如
     开场场景图：「Picture 1 中的女生站在直播间里，背后是灯光货架和环形补光灯，同样的发型、白色罗纹背心、同样的脸，竖屏自拍构图，画面里不要任何文字」
     四视图：「同一个人、同一套衣服发型，四格并排：正面 / 左侧 / 右侧 / 背面，浅灰无缝背景，不出现任何文字」
-输出 <out>/<id>.png，进度存 <out>/.scene_state.json（改了内容才重做）。每张约 2–5 分钟（25 步，2026-11-12 实测首张含加载 307 秒）。人物在参考图里是近景时，「中景、头顶留背景」不一定听，要中景就给一张中景参考。
+输出 <out>/<id>.png，进度存 <out>/.scene_state.json（改了内容才重做）。每张约 25–50 秒（25 步；2026-11-13 实测 t2i 流程：纯文生 50 秒、带 1 张参考 25 秒；首张含模型加载最多约 5 分钟）。人物在参考图里是近景时，「中景、头顶留背景」不一定听，要中景就给一张中景参考。
 开场场景图要拿来当口播参考图时：script.json 那几段加 "ref": "<out>/<id>.png"（comfy_batch.py 会用它替代默认形象照）。
 """
 import json, sys, hashlib
@@ -33,7 +35,8 @@ def main():
     steps, seed = int(arg("--steps", 25)), int(arg("--seed", 3))
     only = set(filter(None, arg("--only", "").split(","))); redo = set(filter(None, arg("--redo", "").split(",")))
     stf = out / ".scene_state.json"; st = json.loads(stf.read_text()) if stf.exists() else {}
-    tpl = json.loads((HERE.parent / "comfy/qwen_edit.api.json").read_text())
+    tpl = json.loads((HERE.parent / "comfy/qwen_t2i.api.json").read_text())
+    enhance_all = "--enhance" in sys.argv
     for s in json.loads(src.read_text()):
         if only and s["id"] not in only:
             continue
@@ -42,23 +45,36 @@ def main():
         if len(refs) > 10: sys.exit(f"{s['id']}：参考图最多 10 张")
         for r in refs:
             if not r.exists(): sys.exit(f"{s['id']}：找不到参考图 {r}")
-        key = hashlib.sha1(json.dumps([s["prompt"], w, h, steps, seed, [hashlib.sha1(r.read_bytes()).hexdigest() for r in refs]]).encode()).hexdigest()[:12]
+        enhance = bool(s.get("enhance", enhance_all)) and not refs
+        if (s.get("enhance") or enhance_all) and refs:
+            print(f"  {s['id']}：有参考图，不走提示词增强")
+        key = hashlib.sha1(json.dumps([s["prompt"], w, h, steps, seed, enhance, [hashlib.sha1(r.read_bytes()).hexdigest() for r in refs]]).encode()).hexdigest()[:12]
         dst = out / f"{s['id']}.png"
         if st.get(s["id"]) == key and dst.exists() and s["id"] not in redo:
             print(f"  {s['id']} 已有，跳过"); continue
         wf = json.loads(json.dumps(tpl))
+        enc = wf["452"]["inputs"]
+        if enhance:   # 474 开关 → 471 TextGenerate 改写 → 472 → 编码器
+            wf["474"]["inputs"].update(switch=True, on_false=s["prompt"])
+            wf["471"]["inputs"].update(prompt=s["prompt"])
+            wf["471"]["inputs"]["sampling_mode.seed"] = seed
+        else:         # 不增强：拿掉增强器这一支，免得加载 9B 模型
+            for k in ("471", "472", "473", "474", "475"):
+                wf.pop(k)
+            enc["prompt"] = s["prompt"]
+        if refs:
+            enc["vae"] = ["454", 0]   # 参考图要经 VAE 拼进序列
         for i, r in enumerate(refs, 1):
             nid = f"r{i}"
             wf[nid] = {"class_type": "LoadImage", "inputs": {"image": CB.upload(r, f"scene_ref_{hashlib.sha1(r.read_bytes()).hexdigest()[:10]}{r.suffix}")}}
-            wf["474"]["inputs"][f"images.image_{i}"] = [nid, 0]
-        wf["474"]["inputs"]["prompt"] = s["prompt"]
+            enc[f"images.image_{i}"] = [nid, 0]
         wf["456"]["inputs"].update(width=w, height=h)
         wf["458"]["inputs"].update(seed=seed, steps=steps)
         wf["461"]["inputs"]["filename_prefix"] = f"koubo/scene/{s['id']}"
         outs, took = CB.wait(CB.submit(wf), f"{s['id']} 场景图", poll=5)
         CB.fetch(outs, "461", dst)
         st[s["id"]] = key; stf.write_text(json.dumps(st, indent=1))
-        print(f"  {s['id']} 完成（{took:.0f}s，{w}×{h}，参考 {len(refs)} 张）→ {dst}", flush=True)
+        print(f"  {s['id']} 完成（{took:.0f}s，{w}×{h}，参考 {len(refs)} 张{'，提示词增强' if enhance else ''}）→ {dst}", flush=True)
 
 
 if __name__ == "__main__":

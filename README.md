@@ -124,7 +124,7 @@ script.json ─► comfy_batch.py --stage plan     estimate GPU time per segment
                                                prompt in H3 Ref2VA format → gen/prompts/<id>.txt
                                                progress in gen/state.json (resumable; only changed segments redo)
             ─► assemble.py --src 'gen/{id}.mp4' → align.py → tl.json → Remotion → loudnorm → cover
-side jobs:   comfy_scene.py  (Qwen Image 2.1 edit: host into a livestream room / shop / street, 4-view, stickers)
+side jobs:   comfy_scene.py  (Qwen Image 2.1 t2i, host photo as reference: livestream room / shop / street, 4-view, stickers)
              comfy_broll.py  (H3 text- or image-to-video B-roll, 16:9)
              comfy_music.py  (MiniMax Music 3 instrumental BGM → check with `earshot describe`)
              cutout_video.py (BiRefNet mask for text-behind-presenter on Linux / Windows)
@@ -138,7 +138,7 @@ side jobs:   comfy_scene.py  (Qwen Image 2.1 edit: host into a livestream room /
 | Voice | Grok native voice · optional Xiaomi MiMo TTS | **Qwen3-TTS 1.7B Base** voice clone | `comfy_batch.py --stage tts` |
 | Voice QA | whisper.cpp | **SenseVoice Small** (inside ComfyUI) + whisper.cpp | `comfy_batch.py`, `misread_check.py` |
 | Presenter video | Grok Video 1.5 (Renoise) | **MiniMax H3 Ref2VA** + 4-step Lightning LoRA | `build_tasks.py` / `comfy_batch.py --stage video` |
-| Scene image, 4-view, stickers | GPT Image 2.5 (Renoise) | **Qwen Image 2.1** image edit | `comfy_scene.py` |
+| Scene image, 4-view, stickers | GPT Image 2.5 (Renoise) | **Qwen Image 2.1** (host photo as reference) | `comfy_scene.py` |
 | B-roll | Wan 3.0 (Renoise) | **MiniMax H3** T2VA / I2VA + 8-step Lightning LoRA | `comfy_broll.py` |
 | Background music | placeholder from `make_assets.py` | **MiniMax Music 3** | `comfy_music.py` |
 | Sound effects | `make_assets.py` (synthesised) / **earshot** kit | **earshot** kit | `lin_sfx.py` |
@@ -155,14 +155,14 @@ Flattened API-format graphs. The scripts load them, fill in text / images / audi
 | `tts_clone.api.json` | `comfy_batch.py` | `Qwen3TTSLoader` · `Qwen3TTSVoiceClonePrompt` · `Qwen3TTSVoiceClone` | `Qwen/Qwen3-TTS-12Hz-1.7B-Base` (downloaded by the node pack) |
 | `h3_r2v_audio.api.json` | `comfy_batch.py` | `MiniMaxH3ReferenceToVideo` · `SamplerCustomAdvanced` · `CreateVideo` | `minimax_h3_ref2va_pruned_int8_convrot` · LoRA `minimax_h3_ref2v_turbo_4step_v0.1` · text encoder `qwen3vl_32b_minimax_h3_nvfp4_awq` · VAEs `minimax_h3_video_vae_int8_convrot`, `minimax_h3_audio_vae_fp32` |
 | `h3_i2v.api.json` | `comfy_broll.py` | `MiniMaxH3ImageToVideo` | `minimax_h3_fl2va_pruned_int8_convrot` · LoRA `minimax_h3_fl2v_turbo_8step_v1.0` · same text encoder and VAEs |
-| `qwen_edit.api.json` | `comfy_scene.py` | `TextEncodeQwenImage21` · `QwenImage21Cache` | `qwen_image_2.1_int8_convrot` · `qwen3vl_8b_int8_convrot` · `qwen_image_2.1_vae_bf16` |
+| `qwen_t2i.api.json` | `comfy_scene.py` | `TextEncodeQwenImage21` · `QwenImage21Cache` · optional prompt enhancer `TextGenerate` | `qwen_image_2.1_int8_convrot` · `qwen3vl_8b_int8_convrot` · `qwen_image_2.1_vae_bf16` · enhancer `qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot` (only with `--enhance`) |
 | `music.api.json` | `comfy_music.py` | `MiniMaxMusic3TextEncode` · `EmptyMiniMaxMusic3LatentAudio` · `KSampler` | `minimax_music3_dit_fp16` · `minimax_music3_text_encoder_pruned_int8_convrot` · `minimax_music3_dav` |
 | *(built in script)* | `cutout_video.py` | `LoadBackgroundRemovalModel` · `RemoveBackground` | `birefnet.safetensors` |
 | *(built in script)* | `comfy_batch.py` | `Qwen3TTSSenseVoiceASR` | `iic/SenseVoiceSmall` (downloaded by the node pack) |
 
 ### Presenters for the local route
 
-`persona.json → comfy.hosts` defines each local presenter: photo (`avatar`), output size, voice sample (`voice_ref` + `voice_ref_text`), English appearance text for the prompt (`look`, plus `look_person` without the studio for use with scene images), voice description and default framing. Two are included: `tank` (the default white-tank-top host, `assets/avatar_ref.jpg`) and `girl` (`assets/host_girl_*.png`). The H3 prompt template is `comfy.prompt_template` (Ref2VA format: subject_definitions / summary / retention_analysis / detailed_description / soundscape / music).
+`persona.json → comfy.hosts` defines each local presenter: photo (`avatar`), output size, voice sample (`voice_ref` + `voice_ref_text`), English appearance text for the prompt (`look`, plus `look_person` without the studio for use with scene images), voice description and default framing. Two are included: `tank` (the default white-tank-top host, `assets/avatar_ref.jpg`) and `girl` (`assets/host_girl_*.png`). The `girl` images and both voice samples (`assets/voice_ref_*.flac`) are AI-generated, not real people. The H3 prompt template is `comfy.prompt_template` (Ref2VA format: subject_definitions / summary / retention_analysis / detailed_description / soundscape / music).
 
 ---
 
@@ -253,13 +253,14 @@ Skip step 3 if you only want the local route (you can also set up both and choos
 | | `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` | 8-step B-roll |
 | `text_encoders/` | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | H3 |
 | | `qwen3vl_8b_int8_convrot.safetensors` | Qwen Image 2.1 |
+| | `qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot.safetensors` | Qwen Image 2.1 prompt enhancer (optional, `--enhance`) |
 | | `minimax_music3_text_encoder_pruned_int8_convrot.safetensors` | Music 3 |
 | `vae/` | `minimax_h3_video_vae_int8_convrot.safetensors`, `minimax_h3_audio_vae_fp32.safetensors` | H3 |
 | | `qwen_image_2.1_vae_bf16.safetensors` | Qwen Image 2.1 |
 | | `minimax_music3_dav.safetensors` | Music 3 |
 | `background_removal/` | `birefnet.safetensors` | text-behind-presenter cutout |
 
-The easiest way to get them is to open the matching ComfyUI templates (*MiniMax H3 Reference to Video*, *MiniMax H3 Image to Video*, *Qwen Image 2.1 Edit*, *MiniMax Music 3*), which offer to download missing models. If a file name differs in your install, change it in the JSON under `skills/digital-human-koubo/comfy/`.
+The easiest way to get them is to open the matching ComfyUI templates (*MiniMax H3 Reference to Video*, *MiniMax H3 Image to Video*, *Qwen Image 2.1 Text to Image*, *MiniMax Music 3*), which offer to download missing models. If a file name differs in your install, change it in the JSON under `skills/digital-human-koubo/comfy/`.
 
 **Python side** (where the skill runs):
 ```bash
@@ -448,7 +449,7 @@ No credits; the cost is GPU time.
 |---|---|---|
 | Voice clone (Qwen3-TTS) | one 5–14 s line | seconds |
 | Presenter segment (H3 Ref2VA) | 10 s, 672×1216 or 1216×672, 4 steps | ~8 min (4–9 min) |
-| Scene image (Qwen Image 2.1 edit) | 25 steps | 2–5 min |
+| Scene image (Qwen Image 2.1) | 25 steps | 25–50 s (first one with model loading up to ~5 min) |
 | B-roll (H3 T2VA / I2VA) | 5 s, 1216×672, 8 steps | 5–6 min |
 | BGM (MiniMax Music 3) | 35–50 s instrumental, 30 steps | 1–2 min |
 
@@ -464,7 +465,7 @@ skills/
     SKILL.md                      workflow the agent follows
     persona.json                  presenters, voice descriptions, prompt templates
                                   (comfy: local route config, hosts with voice_ref / look / look_person, H3 prompt template)
-    comfy/                        ComfyUI API graphs: tts_clone · h3_r2v_audio · h3_i2v · qwen_edit · music
+    comfy/                        ComfyUI API graphs: tts_clone · h3_r2v_audio · h3_i2v · qwen_t2i · music
     references/                   style menu · packaging · playbook · install · research reports
     scripts/                      build_tasks · rangedl · assemble · align · check_edit · cutout_video
                                   voicefx/unify · doctor · new_edit · make_assets

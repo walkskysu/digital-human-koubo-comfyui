@@ -108,7 +108,7 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 5. **检查**：每段抽帧看口型（停顿处闭嘴、结尾闭嘴）和人脸。
 6. **拼接**：`python3 scripts/assemble.py script.json ids.json --src 'gen/{id}.mp4'`，后面第 6、7 步照常（2026-11-12 在 WSL Ubuntu 上跑通：assemble → align → huazi-916 渲染 → 封面 → 首帧）。WSL 里先 `source ~/.venvs/koubo/bin/activate`（numpy / pillow / playwright / av 都装在这里）。配音本来就照稿念，`misread_check` / `patch_words` 一般用不上；`voicefx/unify.py` 只需轻处理。
 - 提示词是 H3 Ref2VA 格式（persona.json → comfy.prompt_template），每段存在 `gen/prompts/<id>.txt`。
-- **进场景**（直播间、门店、街景）：先 `python scripts/comfy_scene.py scenes.json --out scene`（Qwen Image 2.1 Image Edit，形象照当参考图合成开场画面，每张 2–5 分钟），再在 script.json 那几段加 `"ref": "scene/<id>.png"`，H3 就用这张图当参考。用场景图时提示词改用主播的 `look_person`（只写人物、不写布景），否则 `look` 里的默认演播室会把背景拉回去（2026-11-12 实测：暖白直播间被画成深蓝墙）；新主播记得补这个字段。四视图、贴纸四宫格也用它出。
+- **进场景**（直播间、门店、街景）：先 `python scripts/comfy_scene.py scenes.json --out scene`（Qwen Image 2.1，`comfy/qwen_t2i.api.json`，形象照当参考图合成开场画面；纯文生图可加 `--enhance` 开提示词增强，每张约 25–50 秒，首张含加载最多约 5 分钟），再在 script.json 那几段加 `"ref": "scene/<id>.png"`，H3 就用这张图当参考。用场景图时提示词改用主播的 `look_person`（只写人物、不写布景），否则 `look` 里的默认演播室会把背景拉回去（2026-11-12 实测：暖白直播间被画成深蓝墙）；新主播记得补这个字段。四视图、贴纸四宫格也用它出。
 - **B-roll**：`python scripts/comfy_broll.py broll.json --out <工程>/public/broll [--stage plan]`（H3 文生 / 图生视频，5 秒一段约 5–6 分钟，`--mp 0.4` 更快；带招牌的街景会出乱码字，写成招牌虚化）。字段见脚本文件头。
 - **景深字抠像**：`cutout_video.py` 在非 macOS 上自动走 ComfyUI BiRefNet；**量脸**：`lin_scenes.py --face` 自动用 `face_center.py`（mediapipe）。
 - **BGM**：`python scripts/comfy_music.py --out <工程>/public/music/bgm.mp3 [--caption "…"] [--seed 8]`（MiniMax Music 3，纯音乐，60 秒约 1 分钟出）。模型会提前收尾：lyrics 里 `[Instrumental]` 标签越多越长（5 个约 37 秒），比成片短也没关系，lin_mix.py 会循环。出完用 `earshot describe bgm.mp3` 听一下：voice 类别分数要低（没有人声），看 genre/mood 对不对。
