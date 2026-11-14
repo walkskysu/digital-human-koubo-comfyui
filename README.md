@@ -28,7 +28,7 @@
 你对 Agent 说：
 
 ```text
-用本地 ComfyUI 做一条 9:16 花字口播，主播用 ella，45 秒：一张照片、一台显卡做出五种风格的口播，花字用热闹档。
+在本地做个口播：9:16 花字，主播用 ella，45 秒，讲一张照片、一台显卡做出五种风格的口播，花字用热闹档。
 ```
 
 一张 RTX 3090 跑完后得到这条 44 秒成片（点图看带声音的完整视频）：
@@ -68,7 +68,7 @@ bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh
 **③ 打开 ComfyUI，对 Agent 说一句话**
 
 ```text
-用本地 ComfyUI 做一条 40 秒 9:16 花字口播，讲 72 法则。
+在本地做个口播，讲 72 法则，40 秒，9:16。
 ```
 
 Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 AI 数字人示例主播和声音样本，不用先准备照片和录音就能出第一条片：
@@ -121,14 +121,14 @@ Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 A
 
 ## 成片示例
 
-五种剪辑风格各一条，全部在一张 RTX 3090 上从头做到成片。每条下面是生成它时说的那句话，点图或「播放」看带声音的完整视频。
+五种剪辑风格各一条，全部在一张 RTX 3090 上从头做到成片。每条下面是做这类片子可以说的一句话，点图或「播放」看带声音的完整视频。
 
 | | |
 |:---:|:---:|
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4"><img src="docs/gifs/local-a-72-rule.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4"><img src="docs/gifs/local-c-h3-launch.gif" width="400"></a> |
-| **风格 A · 小林式解说** · 16:9 · 35 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>「用本地 ComfyUI 做一条小林式解说：72 法则，存一笔钱多久能翻一倍，16:9，35 秒。开场用景深字，算例放题板配主播小窗，主播用 annie。」</sub> | **风格 C · 发布解读** · 16:9 · 41 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>「用本地 ComfyUI 做发布解读：MiniMax H3 开源了，画面和声音一起生成，40 秒，主播在侧边，配参数卡。」</sub> |
+| **风格 A · 小林式解说** · 16:9 · 35 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>「在本地做个口播，小林式解说：72 法则，存一笔钱多久能翻一倍，16:9，35 秒。开场用景深字，算例放题板配主播小窗。」</sub> | **风格 C · 发布解读** · 16:9 · 41 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>「在本地做个口播，发布解读：MiniMax H3 开源了，画面和声音一起生成，40 秒，主播在侧边，配参数卡。」</sub> |
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4"><img src="docs/gifs/local-d-tutorial.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4"><img src="docs/gifs/local-e-relay.gif" width="400"></a> |
-| **风格 D · 保姆级教程** · 16:9 · 44 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>「用本地 ComfyUI 做保姆级教程：三步在自己电脑上做出数字人口播（克隆声音 → 生成画面 → 合成剪辑），16:9，45 秒，主播用 annie。」</sub> | **风格 E · 双主播接力** · 16:9 · 37 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>「用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。」</sub> |
+| **风格 D · 保姆级教程** · 16:9 · 44 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>「在本地做个口播，保姆级教程：三步在自己电脑上做出数字人口播（克隆声音 → 生成画面 → 合成剪辑），16:9，45 秒。」</sub> | **风格 E · 双主播接力** · 16:9 · 37 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>「在本地做个口播：annie 和 ella 接力讲双 11 的三个坑，16:9，40 秒。」</sub> |
 
 风格 B（9:16 网红花字口播）就是[页面顶部那条](#一句话一条成片)。
 
@@ -151,11 +151,11 @@ Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 A
 
 ## 指令示例
 
-直接用大白话说。说了「本地 ComfyUI」就走本地路线；没说的话，ComfyUI 在线也默认走本地。
+直接用大白话说，开头一句「在本地做个口播」就行。带「本地」两个字就走本地路线；不说的话，只要 ComfyUI 开着也默认走本地。
 
 ```text
 # A · 小林式解说（16:9，财经 / 科技事件）
-用本地 ComfyUI 讲复利和单利的区别，小林式解说，1 分钟，中间插两段 B-roll。
+在本地做个口播，讲复利和单利的区别，小林式解说，1 分钟，中间插两段 B-roll。
 
 # B · 网红花字口播（9:16，安利 / 种草 / 吐槽）
 本地做 30 秒竖屏种草：这副降噪耳机我用了三个月，说三个优点一个缺点，花字用标准档，结尾引导评论区扣一。

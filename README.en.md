@@ -28,7 +28,7 @@ Voice cloning, lip sync, scene images, B-roll, music, captions and the edit are 
 You tell your agent:
 
 ```text
-Use local ComfyUI for a 9:16 captioned talking head, host ella, 45 seconds: five talking-head styles from one photo and one GPU, lively captions.
+Make a talking-head video locally: 9:16 with animated captions, host ella, 45 seconds, about five talking-head styles from one photo and one GPU, lively captions.
 ```
 
 One RTX 3090 later, you get this 44-second video (click the image for the full video with sound):
@@ -68,7 +68,7 @@ It ticks off what is already installed and lists what is missing (ffmpeg, Node.j
 **③ Start ComfyUI and tell your agent one sentence**
 
 ```text
-Use local ComfyUI: a 40-second 9:16 talking-head video about the rule of 72, with animated captions.
+Make a talking-head video locally about the rule of 72, 40 seconds, 9:16.
 ```
 
 The skill uses the local route whenever `127.0.0.1:8188` is up. Two sample AI digital-human presenters and their voice samples are included, so you can make a first video without preparing a photo or a recording:
@@ -121,14 +121,14 @@ Measured times (RTX 3090):
 
 ## Demos
 
-One video per editing style, each made end to end on a single RTX 3090. Under each is the sentence that produced it. Click an image or "Watch" for the full video with sound.
+One video per editing style, each made end to end on a single RTX 3090. Under each is a sentence you could say to make that kind of video. Click an image or "Watch" for the full video with sound.
 
 | | |
 |:---:|:---:|
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4"><img src="docs/gifs/local-a-72-rule.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4"><img src="docs/gifs/local-c-h3-launch.gif" width="400"></a> |
-| **Style A · Xiaolin-style explainer** · 16:9 · 35 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>"Use local ComfyUI for a Xiaolin-style explainer on the rule of 72 (how long until your money doubles), 16:9, 35 seconds. Open with text behind the presenter, put the worked example on a board with a presenter window, host annie."</sub> | **Style C · Launch breakdown** · 16:9 · 41 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>"Use local ComfyUI for a launch breakdown: MiniMax H3 is open source and generates picture and sound together, 40 seconds, presenter at the side, with spec cards."</sub> |
+| **Style A · Xiaolin-style explainer** · 16:9 · 35 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>"Make a talking-head video locally, Xiaolin-style explainer: the rule of 72 (how long until your money doubles), 16:9, 35 seconds. Open with text behind the presenter, put the worked example on a board with a presenter window."</sub> | **Style C · Launch breakdown** · 16:9 · 41 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>"Make a talking-head video locally, launch breakdown: MiniMax H3 is open source and generates picture and sound together, 40 seconds, presenter at the side, with spec cards."</sub> |
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4"><img src="docs/gifs/local-d-tutorial.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4"><img src="docs/gifs/local-e-relay.gif" width="400"></a> |
-| **Style D · Step-by-step tutorial** · 16:9 · 44 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>"Use local ComfyUI for a step-by-step tutorial: make a talking-head video on your own PC in three steps (clone the voice → generate the video → edit), 16:9, 45 seconds, host annie."</sub> | **Style E · Two-host relay** · 16:9 · 37 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>"Local ComfyUI, no credits: two hosts take turns on three Singles' Day shopping traps, 16:9, 40 seconds." (the request was made in Chinese)</sub> |
+| **Style D · Step-by-step tutorial** · 16:9 · 44 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>"Make a talking-head video locally, step-by-step tutorial: a talking-head video on your own PC in three steps (clone the voice → generate the video → edit), 16:9, 45 seconds."</sub> | **Style E · Two-host relay** · 16:9 · 37 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>"Make a talking-head video locally: annie and ella take turns on three Singles' Day shopping traps, 16:9, 40 seconds."</sub> |
 
 Style B (9:16 talking head with animated captions) is [the one at the top of this page](#one-sentence-one-finished-video).
 
@@ -151,11 +151,11 @@ It also handles multiple presenters taking turns, other languages (English, Japa
 
 ## Example requests
 
-Talk to your agent in plain language. Saying "local ComfyUI" picks the local route; if you don't, it still defaults to local when ComfyUI is up.
+Talk to your agent in plain language; "make a talking-head video locally" is enough to start (in Chinese: 「在本地做个口播」). Saying "locally" picks the local route; if you don't, it still defaults to local whenever ComfyUI is running.
 
 ```text
 # A · Xiaolin-style explainer (16:9, finance / tech events)
-Use local ComfyUI: explain compound vs. simple interest in the Xiaolin style, 1 minute, with two B-roll shots in the middle.
+Make a talking-head video locally: compound vs. simple interest in the Xiaolin style, 1 minute, with two B-roll shots in the middle.
 
 # B · Talking head with animated captions (9:16, picks / reviews / rants)
 Make a local 30-second vertical review: I've used these noise-cancelling earbuds for three months, three pros and one con, standard captions, end by asking viewers to comment.
