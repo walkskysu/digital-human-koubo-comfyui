@@ -83,7 +83,7 @@ bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh
 
 ## 5 · 主播的声音
 
-录 12–20 秒干净、无混响的**你自己的**声音（或你有授权的声音），放进 `assets/`，在 `persona.json → comfy.hosts` 里给这个主播填 `voice_ref` 和 `voice_ref_text`（逐字文本）。仓库自带两个 AI 生成的示例主播（见[本地路线的主播](../README.zh-CN.md#本地路线的主播)）。
+录 12–20 秒干净、无混响的**你自己的**声音（或你有授权的声音），放进 `assets/`，在 `persona.json → comfy.hosts` 里给这个主播填 `voice_ref` 和 `voice_ref_text`（逐字文本）。仓库自带两个 AI 生成的示例主播（见[本地路线的主播](WORKFLOWS.zh-CN.md#本地路线的主播)）。
 
 ## 6 · earshot：音效 + 配乐检查
 

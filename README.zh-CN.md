@@ -1,358 +1,218 @@
 <div align="center">
 
-# Digital Human Koubo · 本地 ComfyUI 版
+# Digital Human Koubo · 本地 ComfyUI 数字人口播
 
-**一张照片 + 一段稿子 → 一条对好口型的数字人口播成片，全部在你自己的显卡上生成。**
-声音克隆、对口型、场景图、B-roll、配乐、字幕、头部博主级包装，由你的 AI Agent 通过**本地 ComfyUI** 自动完成。不花积分，不要 API Key。
+**一张照片 + 一句话 → 一条对好口型的数字人口播成片，全程在你自己的显卡上生成。**
+声音克隆、对口型、场景图、B-roll、配乐、字幕、包装剪辑，你的 AI Agent 通过本地 ComfyUI 自动做完。
 
 [English](README.md) · **简体中文**
 
-<sub>基于 Berryxia 的 <a href="https://github.com/andyhuo520/digital-human-koubo">andyhuo520/digital-human-koubo</a>，本版本新增全本地 ComfyUI 路线。</sub>
-
 [![Local ComfyUI](https://img.shields.io/badge/generation-local%20ComfyUI-3b5bdb)](https://github.com/comfyanonymous/ComfyUI)
 ![Tested on RTX 3090](https://img.shields.io/badge/tested-RTX%203090%2024GB-76b900)
-![Open models](https://img.shields.io/badge/models-MiniMax%20H3%20·%20Qwen3--TTS%20·%20Qwen%20Image%202.1-6e40c9)
 [![License: MIT](https://img.shields.io/badge/license-MIT-black.svg)](LICENSE)
-![Agent Skill](https://img.shields.io/badge/Agent%20Skill-SKILL.md-orange)
-![Remotion](https://img.shields.io/badge/edit-Remotion%204-0b84f3)
 
-<img src="docs/images/local-cover.jpg" width="880" alt="本地 ComfyUI 路线做的五条成片封面">
+<img src="docs/images/local-cover.jpg" width="880" alt="本地 ComfyUI 路线做的五条数字人口播成片封面">
+
+| 🖥️ 全本地 | 🔑 零积分 · 零 API Key | 💬 一句指令出片 |
+|:---:|:---:|:---:|
+| 配音、画面、配乐、剪辑都在你的显卡上跑 | 生成不调任何云端接口，花的只是 GPU 时间 | 不写提示词、不连节点、不动剪辑软件 |
+
+<sub>基于 Berryxia 的 <a href="https://github.com/andyhuo520/digital-human-koubo">andyhuo520/digital-human-koubo</a>，本仓库新增全本地 ComfyUI 路线。</sub>
 
 </div>
 
-> **上面五条片子全部在一张 RTX 3090 上生成**：配音、对口型主播、场景图、B-roll、配乐、音效。
-> **Qwen3-TTS** 克隆主播声音 → **MiniMax H3** *照着这段配音*生成主播画面，口型自然对上 → **Qwen Image 2.1** 出场景 → **MiniMax Music 3** 出配乐 → **earshot** 做音效 → **Remotion** 剪辑包装。
-> 直达：[成片示例](#本地路线成片示例) · [安装](docs/INSTALL.zh-CN.md) · [ComfyUI 工作流](#comfyui-工作流) · [快速开始](#快速开始)
->
-> 原来的云端路线（[Renoise MCP](#云端路线renoise-mcp可选)：Grok Video、GPT Image、Wan）仍然保留，每条片子可以自己选。
-
 ---
 
-## 本地路线成片示例
+## 一句话，一条成片
 
-每种剪辑风格各做了一条短片，全部用本地路线在 RTX 3090 上从头做到成片（40 秒左右的成片约占 40–70 分钟 GPU 时间）。点 GIF 或「播放」看完整视频。
+你对 Agent 说：
+
+```text
+用本地 ComfyUI 做一条 9:16 花字口播，主播用 tank，45 秒：一张照片、一台显卡做出五种风格的口播，花字用热闹档。
+```
+
+一张 RTX 3090 跑完后得到这条 44 秒成片（点图看带声音的完整视频）：
 
 <div align="center">
-<a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-b-five-styles.mp4"><img src="docs/gifs/local-b-five-styles.gif" width="270"></a><br>
-<b>风格 B · 网红花字口播</b> · 9:16 · 44 秒 · 8 段<br>
-「一张照片做出五种口播」：自拍 vlog 和全身镜头交替，花字、表情、画中画<br>
-<a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-b-five-styles.mp4">▶ 播放</a>
+<!-- 想让视频在页面里直接播放（带声音）：在 GitHub 网页上编辑本文件，把 MP4 拖进编辑框，用生成的 user-attachments 链接替换下面这个 <a> 块 -->
+<a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-b-five-styles.mp4"><img src="docs/gifs/local-b-five-styles.gif" width="270" alt="风格 B 网红花字口播成片预览"></a><br>
+<a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-b-five-styles.mp4">▶ 播放（有声）</a>
 </div>
 
-| | |
-|:---:|:---:|
-| <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4"><img src="docs/gifs/local-a-72-rule.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4"><img src="docs/gifs/local-c-h3-launch.gif" width="400"></a> |
-| **风格 A · 财经解说** · 16:9 · 35 秒<br>「72 法则」：景深字、题板 + 主播小窗、对比条、H3 B-roll<br>[▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4) | **风格 C · 发布解读** · 16:9 · 41 秒<br>「MiniMax H3：画面和声音一起出」：主播在侧边，参数卡<br>[▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4) |
-| <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4"><img src="docs/gifs/local-d-tutorial.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4"><img src="docs/gifs/local-e-relay.gif" width="400"></a> |
-| **风格 D · 保姆级教程** · 16:9 · 44 秒<br>「三步做出本地数字人口播」：终端、时间线、步骤追踪<br>[▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4) | **风格 E · 双主播接力** · 16:9 · 37 秒<br>「双 11 先别急着付款：3 个坑」：两位主播、Qwen Image 场景、一句英文<br>[▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4) |
+中间你只需要点两次头：确认 GPU 用时估算，看一眼第 1 段。
 
-> 主播全部是 AI 数字人（`assets/host_girl_*.png` 和声音样本都是 AI 生成的，不是真人），每条片子都标了「内容由 AI 数字人演绎」。原项目云端路线的示例在下面的[云端路线](#云端路线renoise-mcp可选)。
-
----
-
-## 安装（本地 ComfyUI 路线）
-
-完整步骤见 **[docs/INSTALL.zh-CN.md](docs/INSTALL.zh-CN.md)**：下载代码、把 Skill 装进 Agent、ComfyUI 节点包和模型清单、Python 环境和本机工具、主播声音、earshot 和占位音效。装完用 `bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh` 检查，缺什么它会列出来。
-
----
-
-## ComfyUI 工作流
-
-### 本地路线逐步说明
-
-云端路线是先出画面、声音用视频模型自带的。本地路线**反过来：先配音，再出画面**。配音作为 `<Audio 1>`（fully_copy）喂给 MiniMax H3，嘴型是**照着最终音频**生成的，所以用克隆声音口型也是准的，事后不用再换声音。
-
-```
-script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
-            ─► comfy_batch.py --stage tts      Qwen3-TTS 克隆主播的 voice_ref（12–20 秒干声 + 逐字文本）
-                                               └► SenseVoice 不带原文转写，准确率 < 90% 打 ⚠
-                                                  念错：在 script.json 那段加 "seed": 新数 再跑（只重配那一段）
-            ─► comfy_batch.py --stage video    MiniMax H3 参考生视频，4 步 Lightning LoRA
-                                               <Picture 1> = 主播照片或场景图（"ref"）
-                                               <Audio 1>   = 配音，fully_copy → 对口型
-                                               提示词用 H3 Ref2VA 格式 → gen/prompts/<id>.txt
-                                               进度存 gen/state.json（可续跑，只重做改过的段）
-            ─► assemble.py --src 'gen/{id}.mp4' → align.py → tl.json → Remotion → 响度 → 封面
-旁支任务：   comfy_scene.py  （Qwen Image 2.1 文生图，主播照当参考图：直播间 / 门店 / 街景，四视图，贴纸）
-             comfy_broll.py  （H3 文生 / 图生视频 B-roll，16:9）
-             comfy_music.py  （MiniMax Music 3 纯音乐配乐 → 用 `earshot describe` 检查）
-             cutout_video.py （BiRefNet 抠像，Linux / Windows 上做景深字）
-             face_center.py  （mediapipe 量脸，风格 A 构图用）
-```
-
-### 界面格式工作流（`workflows/`）
-
-把文件拖进 ComfyUI 画布（或「工作流 → 打开」）就能看、能手动跑。图片 / 音频输入都换成了 `example.png` / `example.flac`，用时换成你自己的。每个 API 版本具体改了什么，见 [`workflows/README.md`](workflows/README.md)。
-
-| 工作流 | 用途 | Skill 实际提交的 API 版本 |
-|---|---|---|
-| [`qwen3_tts_voice_clone.json`](workflows/qwen3_tts_voice_clone.json) | Qwen3-TTS 声音克隆 + SenseVoice 回听 | `comfy/tts_clone.api.json` |
-| [`qwen3_tts_voice_design.json`](workflows/qwen3_tts_voice_design.json) | 用文字描述设计新音色 | —（只用来做示例声音样本） |
-| [`video_minimax_h3_r2v_3ref.json`](workflows/video_minimax_h3_r2v_3ref.json) | MiniMax H3 参考生视频，4 步 Lightning LoRA | `comfy/h3_r2v_audio.api.json`（1 张参考图 + 配音当 `<Audio 1>`） |
-| [`video_minimax_h3_i2v.json`](workflows/video_minimax_h3_i2v.json) | MiniMax H3 图生视频，8 步 Lightning LoRA | `comfy/h3_i2v.api.json`（没首帧时变文生视频） |
-| [`image_qwen_image_2_1_t2i.json`](workflows/image_qwen_image_2_1_t2i.json) | Qwen Image 2.1 文生图，可选提示词增强 | `comfy/qwen_t2i.api.json`（可接参考图） |
-| [`audio_minimax_music_3.json`](workflows/audio_minimax_music_3.json) | MiniMax Music 3 歌曲 / 纯音乐 | `comfy/music.api.json` |
-| [`birefnet_remove_background.json`](workflows/birefnet_remove_background.json) | BiRefNet 人像 / 背景遮罩 | `scripts/cutout_video.py` 里拼（视频输入，按 8 秒分块） |
-
-### 脚本提交的 API 格式图（`skills/digital-human-koubo/comfy/`）
-
-都是展平的 API 格式图。脚本读进来，填上文字 / 图片 / 音频 / 种子，通过 ComfyUI 的 REST API（`/upload`、`/prompt`、`/history`、`/view`）提交和取回。地址在 `persona.json` 的 `comfy.url`（默认 `http://127.0.0.1:8188`）。
-
-| 文件 | 谁在用 | 主要节点 | 模型文件 |
-|---|---|---|---|
-| `tts_clone.api.json` | `comfy_batch.py` | `Qwen3TTSLoader` · `Qwen3TTSVoiceClonePrompt` · `Qwen3TTSVoiceClone` | `Qwen/Qwen3-TTS-12Hz-1.7B-Base`（节点包自动下载） |
-| `h3_r2v_audio.api.json` | `comfy_batch.py` | `MiniMaxH3ReferenceToVideo` · `SamplerCustomAdvanced` · `CreateVideo` | `minimax_h3_ref2va_pruned_int8_convrot` · LoRA `minimax_h3_ref2v_turbo_4step_v0.1` · 文本编码器 `qwen3vl_32b_minimax_h3_nvfp4_awq` · VAE `minimax_h3_video_vae_int8_convrot`、`minimax_h3_audio_vae_fp32` |
-| `h3_i2v.api.json` | `comfy_broll.py` | `MiniMaxH3ImageToVideo` | `minimax_h3_fl2va_pruned_int8_convrot` · LoRA `minimax_h3_fl2v_turbo_8step_v1.0` · 文本编码器和 VAE 同上 |
-| `qwen_t2i.api.json` | `comfy_scene.py` | `TextEncodeQwenImage21` · `QwenImage21Cache` · 可选提示词增强 `TextGenerate` | `qwen_image_2.1_int8_convrot` · `qwen3vl_8b_int8_convrot` · `qwen_image_2.1_vae_bf16` · 增强器 `qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot`（只在 `--enhance` 时用） |
-| `music.api.json` | `comfy_music.py` | `MiniMaxMusic3TextEncode` · `EmptyMiniMaxMusic3LatentAudio` · `KSampler` | `minimax_music3_dit_fp16` · `minimax_music3_text_encoder_pruned_int8_convrot` · `minimax_music3_dav` |
-| *（脚本里拼）* | `cutout_video.py` | `LoadBackgroundRemovalModel` · `RemoveBackground` | `birefnet.safetensors` |
-| *（脚本里拼）* | `comfy_batch.py` | `Qwen3TTSSenseVoiceASR` | `iic/SenseVoiceSmall`（节点包自动下载） |
-
-### 本地路线的主播
-
-`persona.json → comfy.hosts` 定义每个本地主播：照片（`avatar`）、输出尺寸、声音样本（`voice_ref` + `voice_ref_text`）、给提示词用的英文外形描述（`look`；另有只写人物、不写布景的 `look_person`，配场景图时用）、声音描述、默认构图。自带两个：`tank`（默认的白背心主播，`assets/avatar_ref.jpg`）和 `girl`（`assets/host_girl_*.png`）。`girl` 的形象图和两个声音样本（`assets/voice_ref_*.flac`）都是 AI 生成的，不是真人。H3 提示词模板在 `comfy.prompt_template`（Ref2VA 格式：subject_definitions / summary / retention_analysis / detailed_description / soundscape / music）。
-
-### GPU 用时（RTX 3090 24 GB，实测）
-
-不花积分，花的是 GPU 时间。
-
-| 任务 | 设置 | 用时 |
-|---|---|---|
-| 克隆配音（Qwen3-TTS） | 一句 5–14 秒 | 几秒 |
-| 主播一段（H3 Ref2VA） | 10 秒，672×1216 或 1216×672，4 步 | 约 8 分钟（4–9 分钟） |
-| 场景图（Qwen Image 2.1） | 25 步 | 25–50 秒（第一张含加载最多约 5 分钟） |
-| B-roll（H3 T2VA / I2VA） | 5 秒，1216×672，8 步 | 5–6 分钟 |
-| 配乐（MiniMax Music 3） | 35–50 秒纯音乐，30 步 | 1–2 分钟 |
-
-一条 40 秒左右的成片（5–8 段口播）约占 40–70 分钟 GPU 时间。
+**目录**：[快速开始](#快速开始) · [适合谁](#适合谁--不适合谁) · [成片示例](#成片示例) · [你不用做的事](#你不用做的事) · [指令示例](#指令示例) · [流程](#从一句话到成片) · [本地 vs 云端](#本地-vs-云端) · [风格与包装](#五种剪辑风格) · [文档](#文档) · [红线](#使用红线) · [许可](#许可与第三方)
 
 ---
 
 ## 快速开始
 
-直接用大白话跟 Agent 说。下面按剪辑风格各列几句，每组第一句就是对应[成片示例](#本地路线成片示例)的做法。说了「本地 ComfyUI」就走本地路线；没说的话，Skill 检测到 127.0.0.1:8188 在线也会默认走本地。
+**前提**：一张 24 GB 显存的 NVIDIA 显卡，装好 [ComfyUI](https://github.com/comfyanonymous/ComfyUI) 0.44 或更新，以及一个能在本机跑命令的 Agent（实测用的是 Claude Code）。
 
-**A · 小林式解说**（16:9，财经 / 科技事件）
+**① 下载并把 Skill 装进 Agent**
 
-```text
-用本地 ComfyUI 做一条小林式解说：72 法则，存一笔钱多久能翻一倍，16:9，35 秒。开场用景深字，算例放题板配主播小窗，主播用 girl。
-用本地 ComfyUI 讲复利和单利的区别，小林式解说，1 分钟，中间插两段 B-roll。
-本地做一条解说：为什么每年 1% 的手续费能吃掉三分之一的收益？加对比条和算例，配乐用 MiniMax Music 生成。
+```bash
+git clone https://github.com/walkskysu/digital-human-koubo-comfyui.git
+cd digital-human-koubo-comfyui
+mkdir -p ~/.claude/skills && cp -R skills/digital-human-koubo skills/finance-explainer ~/.claude/skills/
 ```
 
-**B · 网红花字口播**（9:16，安利 / 种草 / 吐槽）
+**② 一条命令检查环境**
+
+```bash
+bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh
+```
+
+已经装好的打勾跳过，缺什么（ffmpeg、Node.js、whisper、ComfyUI 模型……）它会列出来并给出装法。模型不用手动找：在 ComfyUI 里打开对应的内置模板，缺的模型它会提示下载。完整清单见 **[安装文档](docs/INSTALL.zh-CN.md)**。
+
+**③ 打开 ComfyUI，对 Agent 说一句话**
 
 ```text
-用本地 ComfyUI 做一条 9:16 花字口播，主播用 tank，45 秒：一张照片、一台显卡做出五种风格的口播，花字用热闹档。
 用本地 ComfyUI 做一条 40 秒 9:16 花字口播，讲 72 法则。
+```
+
+Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 AI 生成的示例主播（`tank`、`girl`）和声音样本，不用先准备照片和录音就能出第一条片。
+
+<details>
+<summary>用的不是 Claude Code？各 Agent 的装法</summary>
+
+本地路线只要 Agent **能装 Agent Skills**（标准 `SKILL.md` 格式）并且**能在你电脑上执行命令**，不需要 MCP。
+
+| Agent | 装 Skill | 状态 |
+|---|---|---|
+| **Claude Code** | `~/.claude/skills/` | ✅ 已实测，示例成片就是用它做的 |
+| **Codex**（CLI / 桌面） | `~/.codex/skills/` | ✅ 预期可用（同一套脚本） |
+| **OpenClaw** | 放进 OpenClaw 的技能目录（见其文档） | ⚙️ 应可用 |
+| **WorkBuddy** | 技能 → 导入文件夹 / 压缩包 | ⚙️ 应可用，菜单名以 App 当前版本为准 |
+| **豆包** · **千问办公** · **纳米Work** 等 | 产品支持 Agent Skills 就导入 | ⚙️ 需要能在本机执行命令 |
+| **Claude 桌面端 / claude.ai** | 设置里上传技能包 | ⚠️ 只有沙盒，跑不了本地路线；只能做[云端路线](docs/CLOUD.zh-CN.md)的写稿和生成 |
+
+</details>
+
+---
+
+## 适合谁 / 不适合谁
+
+| ✅ 适合 | ❌ 暂时不适合 |
+|---|---|
+| 有一张 24 GB 显存的 NVIDIA 显卡（实测 RTX 3090 + 34 GB 内存） | 没有独立显卡，或想几分钟内拿到成片 → 用[云端路线](docs/CLOUD.zh-CN.md) |
+| 愿意让显卡跑一会儿：40 秒成片约占 **40–70 分钟** GPU 时间 | 显存小于 24 GB：没有实测过，不保证能跑 |
+| 不想按秒付积分，不想把照片和录音传到生成服务 | 想做几分钟的长片：能做，但 GPU 时间按段数增加（每 10 秒口播约 8 分钟） |
+| Windows（ComfyUI Desktop）+ WSL2，或 Linux 原生 | 完全不想碰命令行：安装时需要跑几条命令 |
+
+实测用时（RTX 3090）：
+
+| 任务 | 用时 |
+|---|---|
+| 克隆配音一句（5–14 秒） | 几秒 |
+| 主播对口型一段（10 秒） | 约 8 分钟 |
+| 场景图一张 | 25–50 秒 |
+| B-roll 一段（5 秒） | 5–6 分钟 |
+| 配乐一条（35–50 秒） | 1–2 分钟 |
+
+---
+
+## 成片示例
+
+五种剪辑风格各一条，全部在一张 RTX 3090 上从头做到成片。每条下面是生成它时说的那句话，点图或「播放」看带声音的完整视频。
+
+| | |
+|:---:|:---:|
+| <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4"><img src="docs/gifs/local-a-72-rule.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4"><img src="docs/gifs/local-c-h3-launch.gif" width="400"></a> |
+| **风格 A · 小林式解说** · 16:9 · 35 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>「用本地 ComfyUI 做一条小林式解说：72 法则，存一笔钱多久能翻一倍，16:9，35 秒。开场用景深字，算例放题板配主播小窗，主播用 girl。」</sub> | **风格 C · 发布解读** · 16:9 · 41 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>「用本地 ComfyUI 做发布解读：MiniMax H3 开源了，画面和声音一起生成，40 秒，主播在侧边，配参数卡。」</sub> |
+| <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4"><img src="docs/gifs/local-d-tutorial.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4"><img src="docs/gifs/local-e-relay.gif" width="400"></a> |
+| **风格 D · 保姆级教程** · 16:9 · 44 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>「用本地 ComfyUI 做保姆级教程：三步在自己电脑上做出数字人口播（克隆声音 → 生成画面 → 合成剪辑），16:9，45 秒，主播用 girl。」</sub> | **风格 E · 双主播接力** · 16:9 · 37 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>「用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。」</sub> |
+
+风格 B（9:16 网红花字口播）就是[页面顶部那条](#一句话一条成片)。
+
+> 主播全部是 AI 数字人（`assets/host_girl_*.png` 和声音样本都是 AI 生成的，不是真人），每条片子都标了「内容由 AI 数字人演绎」。
+
+---
+
+## 你不用做的事
+
+| | Skill 替你做的 |
+|---|---|
+| **生成** | 不用写提示词、不用连 ComfyUI 节点。Agent 写稿、克隆声音、照着配音生成对好口型的主播画面，按需补场景图、B-roll 和配乐。主播的脸、服装、声音存在 `persona.json`，每条片子都是同一个人。 |
+| **把关** | 不会白烧 GPU。开工前先报「段数 · 秒数 · GPU 用时」，你确认才开始；先做第 1 段给你看，满意再批量。中断了可以续跑，只重做改过的段。 |
+| **质检** | 不用自己逐句听。每句配音自动回听并和稿子比对，念错了只重配那一句；每段抽帧检查画面；分段生成的声音统一处理成像一次录完的。 |
+| **剪辑** | 不用开剪辑软件。按内容推荐剪辑风格，自动上字幕、花字、图表、音效和配乐，统一响度，并把封面接成成片第一帧。想加减什么直接说。 |
+
+也支持多主播接力、英日韩法西阿等多语言、把主播放进生成的场景（直播间、门店、街头）。
+
+---
+
+## 指令示例
+
+直接用大白话说。说了「本地 ComfyUI」就走本地路线；没说的话，ComfyUI 在线也默认走本地。
+
+```text
+# A · 小林式解说（16:9，财经 / 科技事件）
+用本地 ComfyUI 讲复利和单利的区别，小林式解说，1 分钟，中间插两段 B-roll。
+
+# B · 网红花字口播（9:16，安利 / 种草 / 吐槽）
 本地做 30 秒竖屏种草：这副降噪耳机我用了三个月，说三个优点一个缺点，花字用标准档，结尾引导评论区扣一。
-```
 
-**C · 发布解读**（16:9，新品 / 新模型）
-
-```text
-用本地 ComfyUI 做发布解读：MiniMax H3 开源了，画面和声音一起生成，40 秒，主播在侧边，配参数卡。
+# C · 发布解读（16:9，新品 / 新模型）
 本地做一条 45 秒发布解读：Qwen3-TTS 用十几秒录音就能克隆声音，讲三个亮点和一个限制。
-这个新模型刚发布，帮我用本地 ComfyUI 做 1 分钟解读：一句话说清新在哪，三个关键参数，实测速度，适合谁用。
-```
 
-**D · 保姆级教程**（16:9，几步做出 XX）
-
-```text
-用本地 ComfyUI 做保姆级教程：三步在自己电脑上做出数字人口播（克隆声音 → 生成画面 → 合成剪辑），16:9，45 秒，主播用 girl。
+# D · 保姆级教程（16:9，几步做出 XX）
 本地做一条教程：在 ComfyUI 里装 Lightning LoRA，分四步，每步配终端画面和步骤追踪。
-做个 1 分钟本地教程，教新手用 Qwen Image 给主播换背景，要有时间线和步骤编号。
-```
 
-**E · 多主播 · 多语言 · 多场景**（16:9，接力 / 出海）
-
-```text
-用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。
+# E · 多主播 · 多语言 · 多场景（16:9）
 girl 和 tank 接力讲租房的三个坑：第二个坑把 girl 放进 Qwen Image 生成的小区场景里，第三个坑让 tank 用英文讲。
-做一条中英双语产品介绍：girl 用中文开场，tank 用英文讲三个卖点，最后 girl 收尾，16:9，50 秒。
-```
 
-**通用**
-
-```text
+# 通用
 用我的数字人 Skill 讲这段：……（粘贴你的内容）
 用 MiniMax Music 生成配乐，用 earshot 重做音效再混音。
 讲到这几个国家的时候加地图航线 / 把「¥99」放在她身后 / 开场加个预告闪回。
 把包装组件图鉴发我看看
 ```
 
-接下来会发生：
-1. 环境检查：已经装好的直接跳过。
-2. 一行诊断 + 推荐 2 种风格（附预览图），一次问完。
-3. 稿子 + 场景设计 + **GPU 用时估算**（本地）或**积分报价**（云端）→ 你确认 → 先做第 1 段 → 你确认 → 批量。
-4. 质检、修音，按风格默认包装剪辑 → 出成片 MP4，封面接成第一帧。
+**换成你自己的主播**：录 12–20 秒干净的声音，加一张正脸照片，在 `persona.json → comfy.hosts` 里加一项即可（[说明](docs/WORKFLOWS.zh-CN.md#本地路线的主播)）。只用你本人或明确授权的脸和声音。
 
 ---
 
-## 能做什么
-
-- **两套生成引擎，同一条流水线**：本地用 **ComfyUI**（Qwen3-TTS、MiniMax H3、Qwen Image 2.1、MiniMax Music 3、BiRefNet），云端用 **Renoise MCP**（Grok Video 1.5、GPT Image 2.5、Wan 3.0）。写稿、质检、剪辑、包装、封面两边完全一样；跟 Agent 说「用本地 ComfyUI」就行。
-- **一张照片做出固定的数字人**：脸、服装、声音、提示词模板都存在 `persona.json`，每条片子都是同一个人。想进什么场景（直播间、门店、教室、街头），先合成场景图，再让她开口。
-- **先配音再出画面（本地）**：克隆的声音直接驱动 MiniMax H3，口型和最终音频完全对上。每段 ≤ 14 秒。
-- **先报价，再开工**：每次生成前，Agent 先报「段数 · 秒数 · GPU 时间（或积分）」，你点头才开始；先做第 1 段给你看，满意再批量。
-- **两道质检**：每句用 SenseVoice / whisper **不带原文**回听、和稿子比对，念错能抓出来；每段抽 4 帧检查。
-- **声音统一**：1/3 倍频程频谱匹配 + 去齿音 + 同一个小房间混响 + 响度统一，分开生成的片段听起来像一次录完（实测齿音段间差 13.2 dB → 5.9 dB）。
-- **按内容推荐剪辑风格**：Agent 先诊断内容，推荐 2 种风格并附预览图，一次问完（风格 · 比例时长 · 花字强度 · 主播）。
-- **48 个包装组件**：逐帧拆了 25 支头部博主视频（MrBeast、Mark Rober、Ryan Trahan、MKBHD、影视飓风、何同学、Johnny Harris、Vox、Kurzgesagt、回形针、半佛仙人、差评、毕导）。每种风格自带默认包装，想加减直接说。
-- **景深字**：大字 / 数字放在背景和人之间（Linux / Windows 用 BiRefNet，macOS 用 Apple Vision → 三层合成）。
-- **封面即首帧**：每条片子默认出封面（16:9 / 9:16 / 3:4：主播帧 + 钩子大字 + 证据卡），并接成成片第一帧停 0.5 秒。平台默认拿首帧当封面，不用再单独上传。
-- **多语言**：英、日、韩、法、西、阿拉伯语实测，回听准确率 94–100%。
-- **多种 Agent 都能用**：标准 `SKILL.md` Agent Skill + 脚本，只要能装 Skill、能在本机跑命令，就能驱动本地路线。
-
-## 工作流程
+## 从一句话到成片
 
 ```
-你的内容 ──► 0. 环境检查（ComfyUI / ffmpeg / whisper，已经有的直接跳过）
-              1. 诊断内容 → 5 种风格里推荐 2 种 → 一次问完 → brief.json
-              2. 写稿 script.json（本地每段 ≤14 秒 / 云端 ≤15 秒，中文约 5.4 字/秒）
-              3. 估时 / 报价 → 等你确认 → 先做第 1 段 → 你看过 → 批量
-              4. 配音 → 对口型视频（本地）或下载（云端）→ 回听 → 抽帧检查
-              5. 声音统一（频谱匹配 + 去齿音 + 同一房间混响）
-              6. 逐字时间轴（tl.json）
-              7. Remotion 剪辑：风格模板 + 默认包装（+ 你点名的手法）
-              8. 渲染 → 看过渡中间帧 → 响度（-14 / -16 LUFS）
-              9. 封面：挑主播帧 → 16:9 / 9:16 / 3:4 → 接成首帧（停 0.5 秒）
+你的一句话
+  │
+  ├─ Agent 诊断内容、推荐剪辑风格、写稿、估 GPU 用时        ◄ 你确认 ①
+  │
+  ├─ Qwen3-TTS        克隆主播声音配音 → 自动回听，念错的只重配那一句
+  ├─ MiniMax H3       照着这段配音生成主播画面（口型天然对上）  ◄ 先出第 1 段，你确认 ②
+  ├─ Qwen Image 2.1   场景图            ┐
+  ├─ MiniMax H3       B-roll            ├ 按需
+  ├─ MiniMax Music 3  配乐 · earshot 音效 ┘
+  │
+  ├─ 声音统一 → 逐字时间轴 → Remotion 剪辑包装 → 响度
+  └─ 封面接成首帧 → 成片 MP4
 ```
 
-## 架构
+本地路线是**先配音，再出画面**：嘴型是照着最终音频生成的，所以用克隆声音口型也准，事后不用换声音。全部模型都跑在你的 ComfyUI 里，脚本通过它的本地 HTTP API（默认 `http://127.0.0.1:8188`）提交任务。
 
-整个 Skill 分四层。Agent 读 `SKILL.md`，其余都通过脚本驱动；本地和云端两条路线只差在**生成层**。
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ 1. Agent + SKILL.md     诊断内容 → brief.json → script.json → 一次问完/报价 │
-├──────────────────────────────────────┬──────────────────────────────────────┤
-│ 2a. 本地生成（ComfyUI API）          │ 2b. 云端生成（Renoise MCP）          │
-│   Qwen3-TTS        克隆配音          │   Grok Video 1.5  主播画面 + 原生声音│
-│   MiniMax H3 R2V   跟着配音对口型    │   GPT Image 2.5   场景图 / 四视图    │
-│   Qwen Image 2.1   场景图 / 四视图   │   Wan 3.0         B-roll             │
-│   MiniMax H3 T2V/I2V  B-roll         │   MiMo TTS        可选换声音         │
-│   MiniMax Music 3  配乐              │   make_assets.py  占位配乐           │
-│   BiRefNet         人像抠图          │   Apple Vision    人像抠图           │
-├──────────────────────────────────────┴──────────────────────────────────────┤
-│ 3. 质检 + 时间轴   SenseVoice / whisper 回听 · 抽帧检查 ·                   │
-│                    assemble.py（防音画漂移拼接）· align.py → tl.json        │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ 4. 剪辑 + 收尾     Remotion 模板（huazi-916 · lin-169 · reference/*）       │
-│                    48 个包装组件 · earshot 音效 · 配乐随人声压低            │
-│                    响度 -14/-16 LUFS · make_cover → cover_first             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 每一步用到的组件
-
-| 步骤 | 本地路线 | 云端路线 | 脚本 |
-|---|---|---|---|
-| 配音 | **Qwen3-TTS 1.7B Base** 声音克隆 | Grok 原生声音 · 可选小米 MiMo TTS | `comfy_batch.py --stage tts` |
-| 配音质检 | **SenseVoice Small**（在 ComfyUI 里）+ whisper.cpp | whisper.cpp | `comfy_batch.py`、`misread_check.py` |
-| 主播画面 | **MiniMax H3 Ref2VA** + 4 步 Lightning LoRA | Grok Video 1.5（Renoise） | `comfy_batch.py --stage video` / `build_tasks.py` |
-| 场景图、四视图、贴纸 | **Qwen Image 2.1**（主播照当参考图） | GPT Image 2.5（Renoise） | `comfy_scene.py` |
-| B-roll | **MiniMax H3** T2VA / I2VA + 8 步 Lightning LoRA | Wan 3.0（Renoise） | `comfy_broll.py` |
-| 配乐 | **MiniMax Music 3** | `make_assets.py` 占位曲 | `comfy_music.py` |
-| 音效 | **earshot** 音效包 | `make_assets.py`（代码合成）/ earshot 音效包 | `lin_sfx.py` |
-| 人像抠图 | **BiRefNet**（ComfyUI） | Apple Vision（macOS） | `cutout_video.py` |
-| 量脸 | **mediapipe** BlazeFace | Apple Vision（macOS） | `face_center.py` |
-| 拼接、时间轴、剪辑、封面 | ffmpeg · whisper.cpp · Remotion 4 · Playwright | 同左 | `assemble.py` · `align.py` · 模板 · `make_cover.py` |
+每一步跑哪个脚本、哪张工作流、哪些模型文件：见 [工作流与架构](docs/WORKFLOWS.zh-CN.md)。想在 ComfyUI 画布里手动跑，把 [`workflows/`](workflows/) 里的文件拖进去就行。
 
 ---
 
-## 支持哪些 Agent
+## 本地 vs 云端
 
-这个 Skill 是一个带 `SKILL.md`（开放的 Agent Skills 格式）的文件夹，加上 Python / Shell / Remotion 脚本。**本地路线**只要 Agent **能装 Agent Skills**、**能在你电脑上执行命令**；云端路线还需要**能接远程 MCP**（Renoise）。
+本仓库在原项目基础上新增的就是本地路线。原来的云端路线（Renoise MCP）仍然保留，每条片子可以自己选。
 
-| Agent | 装 Skill | 本机执行命令 | 接 Renoise MCP（云端路线） | 状态 |
-|---|---|---|---|---|
-| **Claude Code** | `~/.claude/skills/` | ✅ | `/plugin`（见下文） | ✅ 已实测，本地路线就是用它做的 |
-| **Codex**（CLI / 桌面） | `~/.codex/skills/` | ✅ | `codex mcp add` | ✅ 预期可用（同一套脚本） |
-| **OpenClaw** | 放进 OpenClaw 的技能目录（见其文档） | ✅ | `openclaw plugins install` | ⚙️ 应可用 |
-| **WorkBuddy** | 技能 → 导入文件夹 / 压缩包 | ✅ 桌面端 Agent | 连接器 → 添加自定义 MCP | ⚙️ 应可用，菜单名以 App 当前版本为准 |
-| **豆包** · **千问办公** · **纳米Work** 等 Agent 产品 | 产品支持 Agent Skills 就导入 | 需要 | 支持自定义 / 远程 MCP 就添加 | ⚙️ 满足上面的能力即可，具体入口以各产品文档为准 |
-| **Claude 桌面端 / claude.ai** | 设置里上传技能包 | ⚠️ 只有沙盒 | 连接器 → Add custom connector | 只能做云端路线的写稿、报价、生成；本地路线和剪辑需要能跑命令的 Agent |
-
----
-
-## 云端路线（Renoise MCP，可选）
-
-原来的云端路线照样能用，每条片子可以和本地路线混着选。
-
-<p align="center"><img src="docs/images/cover.jpg" width="820" alt="一张照片 + 一句话，27 秒直播带货广告"></p>
-
-> 这条 27 秒的直播间广告里，主播不存在。脸、声音、直播间、花字、价格动画，全是 AI 做的。
-> 输入只有一句话：「用这个数字人做一条 30 秒直播间广告，卖 WorkBuddy 上手课，10 节课 99 元，原价 999。」
-> 总共花了 **482 [Renoise](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official) 积分**。
-
-### 云端路线示例（来自原项目）
-
-| | | |
-|:---:|:---:|:---:|
-| <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/workbuddy-live-ad.mp4"><img src="docs/gifs/workbuddy-live-ad.gif" width="230"></a> | <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/renoise-koubo-huazi.mp4"><img src="docs/gifs/renoise-koubo-huazi.gif" width="230"></a> | <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/text-behind.mp4"><img src="docs/gifs/text-behind.gif" width="300"></a> |
-| **直播间带货广告** · 9:16 · 27 秒<br>风格 B + 景深价格 ¥999→¥99<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/workbuddy-live-ad.mp4) | **产品推荐口播** · 9:16 · 89 秒<br>花字、动态表情、画中画<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/renoise-koubo-huazi.mp4) | **文字在人身后（景深字）** · 5 秒<br>Vision 人像抠图，三层合成<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/text-behind.mp4) |
-
-| | |
-|:---:|:---:|
-| <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/tutorial-ep2.mp4"><img src="docs/gifs/tutorial-ep2.gif" width="400"></a> | <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/tutorial-digital-human-upgrade.mp4"><img src="docs/gifs/tutorial-digital-human-upgrade.gif" width="400"></a> |
-| **保姆级教程** · 16:9 · 4 分 36 秒<br>数字人亲自讲「我是怎么被做出来的」（风格 D）<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/tutorial-ep2.mp4) | **数字人升级版** · 16:9 · 5 分 55 秒<br>两位主播、六种语言、四个场景、猫狗角色（风格 E）<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/tutorial-digital-human-upgrade.mp4) |
-| <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/memt-launch.mp4"><img src="docs/gifs/memt-launch.gif" width="400"></a> | <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/xiaolin-style-explainer.mp4"><img src="docs/gifs/xiaolin-style-explainer.gif" width="400"></a> |
-| **发布解读** · 16:9 · 39 秒<br>主播在侧边，右侧代码动效（风格 C）<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/memt-launch.mp4) | **财经 / 科技解说** · 16:9 · 2 分 21 秒<br>图表、文件标黄、章节卡（风格 A）<br>[▶ 播放](https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/xiaolin-style-explainer.mp4) |
-
-> 这些主播都是 AI 数字人；男主播是原作者用本人照片做的数字分身。
-
-### 接入 Renoise MCP
-
-先去 **[renoise.ai](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official)** 注册账号。登录都在浏览器里完成，不用复制任何 API key。
-
-| Agent | 怎么接 |
-|---|---|
-| Claude Code | `/plugin marketplace add ArcoCodes/renoise-plugins-official`，再 `/plugin install renoise@renoise-plugins-official` |
-| Codex | `codex mcp add renoise --url https://renoise.ai/api/public/mcp`，再 `codex mcp login renoise` |
-| OpenClaw | `openclaw plugins install renoise --marketplace ArcoCodes/renoise-plugins-official` |
-| Claude 桌面端 / claude.ai | 设置 → 连接器 → **Add custom connector** → 名称 `Renoise`，地址 `https://renoise.ai/api/public/mcp` |
-| WorkBuddy、Cursor、Windsurf、Cline、豆包、千问、纳米Work…… | 添加远程 MCP 服务器，地址 `https://renoise.ai/api/public/mcp`（常见配置：`{"mcpServers":{"renoise":{"url":"https://renoise.ai/api/public/mcp"}}}`） |
-
-官方最新装法：**[renoise.ai/plugin](https://renoise.ai/plugin)**。装好后问 Agent 一句「查一下我的 Renoise 余额」，能查到就连上了。
-
-### （可选）小米 MiMo 语音：音色设计 / 声音克隆
-
-云端路线默认用 Grok 自带的声音（口型最准）。想要设计一个新音色、用你自己的克隆声音，或者做纯旁白视频，Skill 会调用 **小米 MiMo TTS**：
-
-1. 去 **[platform.xiaomimimo.com](https://platform.xiaomimimo.com/)** 注册并创建 API Key。写这份文档时小米的 TTS 模型是限时免费的，具体以官网当前价格为准。
-2. 把 Key 放进环境变量，或写到 `~/.config/ai-teardown/mimo.env`：
-   ```bash
-   mkdir -p ~/.config/ai-teardown && cat > ~/.config/ai-teardown/mimo.env <<'EOF'
-   MIMO_API_KEY=你的key
-   MIMO_BASE_URL=https://api.xiaomimimo.com/v1
-   EOF
-   chmod 600 ~/.config/ai-teardown/mimo.env
-   ```
-3. 只克隆**你本人**的声音，或明确授权给你的声音。
-
-> 注意：Grok 的口型跟的是它自己生成的声音。事后换成别的声音，口型会差约 100 毫秒（画中画看不出，全屏特写看得出）。本地路线是照着克隆声音生成嘴型的，没有这个问题。
-
-### 做你自己的数字人（云端路线）
-
-1. 选一张照片：正脸、光线均匀、头发不挡脸、嘴闭着。**只用你本人或明确授权的照片。**
-2. 让 Agent 生成四视图（正面、两个侧面、背面）：GPT Image 2.5，2k，约 23 积分（本地可用 Qwen Image 2.1），保证换角度不变脸。
-3. 同一张图、同一句台词做多模型对比（Grok Video 1.5 vs Wan 3.0，各 8 秒），选一个。
-4. 把参考图上传到 Renoise，把 `material:<id>` 写进 `skills/digital-human-koubo/persona.json`（`renoise.reference_material`；第二位主播写在 `other_hosts.me`）。
-
-详细步骤见 [`references/new-avatar.md`](skills/digital-human-koubo/references/new-avatar.md)。仓库里的 `material:` ID 属于原作者的账号，你的账号用不了，这是正常的。本地路线只要在 `persona.json → comfy.hosts` 里加一个主播（见[本地路线的主播](#本地路线的主播)）。
-
-<p align="center"><img src="docs/images/scene-composite.jpg" width="720" alt="参考照 → 合成直播间"></p>
-
-### 云端成本参考（真实跑过的数）
-
-| 视频 | 生成内容 | 积分 |
+| | **本地 ComfyUI（本仓库新增）** | 云端 Renoise MCP（原项目） |
 |---|---|---|
-| 直播间广告 9:16 27 秒 | 1 张场景图 + 5 段 Grok 口播（720p） | **482** |
-| 教程第二期 16:9 4 分 36 秒 | 32 段口播（全屏 720p / 画中画 480p）+ 演示素材 | 约 3250 |
-| 数字人升级版 16:9 5 分 55 秒 | 30 段新片段 + 7 张场景图，复用 17 段 | 约 3409 |
+| 花费 | 0 积分，只占 GPU 时间和电费 | 按秒计积分（实测 27 秒直播间广告 482 积分） |
+| 账号 / Key | 生成不需要任何账号或 API Key | 需要 Renoise 账号和积分 |
+| 素材去向 | 照片、录音、成片都在本机生成，不上传到生成服务 ¹ | 参考图和稿子上传到云端生成 |
+| 硬件 | 24 GB 显存的 NVIDIA 显卡 | 不需要显卡 |
+| 用时 | 40 秒成片约 40–70 分钟（3090） | 不占本机 GPU |
+| 口型 | 照着最终配音生成，克隆声音也对得上 | 跟模型自带的声音；事后换声音约差 100 毫秒 |
+| 模型 | Qwen3-TTS · MiniMax H3 · Qwen Image 2.1 · MiniMax Music 3 · BiRefNet | Grok Video 1.5 · GPT Image 2.5 · Wan 3.0 |
 
-写文档时的价格：Grok Video 1.5 720p 17 积分/秒、480p 10 积分/秒；GPT Image 2.5 2k 23 积分/张。以 Agent 实时报价为准。
+<sub>¹ 生成在本机完成。如果你的 Agent 用的是云端大模型，稿子和它检查的抽帧仍会经过那个模型。</sub>
+
+云端路线的接入、示例和成本：[docs/CLOUD.zh-CN.md](docs/CLOUD.zh-CN.md)。
 
 ---
 
@@ -360,125 +220,51 @@ girl 和 tank 接力讲租房的三个坑：第二个坑把 girl 放进 Qwen Ima
 
 <p align="center"><img src="docs/images/five-styles.jpg" width="820" alt="五种剪辑风格"></p>
 
-| 风格 | 比例 | 时长 | 适合 | 模板 |
-|---|---|---|---|---|
-| **A** 小林式解说（财经 / 科技事件） | 16:9 | 3–20 分钟 | 事件、数据、「为什么」 | `templates/lin-169`（plan.json 驱动：景深字、题板+主播小窗、B-roll、公式逐项长出、算例、图表） |
-| **B** 网红花字口播 | 9:16 | 30–120 秒 | 安利、带货、种草、吐槽 | `templates/huazi-916`（数据驱动） |
-| **C** 发布解读 | 16:9 | 30–90 秒 | 新品、新模型发布 | `templates/reference/launch-169` |
-| **D** 保姆级教程 | 16:9 | 3–8 分钟 | 几步做出 XX、工具上手 | `templates/reference/tutorial-169` |
-| **E** 多主播 · 多语言 · 多场景 | 16:9 | 3–7 分钟 | 能力展示、出海 | `templates/reference/multihost-169` |
+| 风格 | 比例 | 适合 |
+|---|---|---|
+| **A** 小林式解说 | 16:9 | 财经 / 科技事件、数据、「为什么」 |
+| **B** 网红花字口播 | 9:16 | 安利、带货、种草、吐槽（花字三档：克制 / 标准 / 热闹） |
+| **C** 发布解读 | 16:9 | 新品、新模型发布 |
+| **D** 保姆级教程 | 16:9 | 几步做出 XX、工具上手 |
+| **E** 多主播 · 多语言 · 多场景 | 16:9 | 能力展示、出海 |
 
-风格 B 有三档花字强度：**克制 / 标准 / 热闹**。
+不用自己选：Agent 会先看内容，推荐 2 种并附预览图。本地路线建议先从 30–60 秒做起。
 
-<p align="center"><img src="docs/images/huazi-presets.jpg" width="820" alt="三档花字强度"></p>
-
-风格 A 只学解说频道的**结构和剪辑语法**，不用真实创作者的脸、声音、布景和原话。
-
----
-
-## 48 个包装组件
-
-逐帧拆了 25 支视频（镜头切分、开场逐拍、屏幕文字、声音），完整报告在 [`references/research/`](skills/digital-human-koubo/references/research/)。
-
-<p align="center"><img src="docs/images/creator-pacing.jpg" width="720" alt="25 支头部博主视频每分钟切数"></p>
-
-**从研究里提炼的规则**（[`packaging-playbook.md`](skills/digital-human-koubo/references/packaging-playbook.md)）：
-- 切数可以低，刺激不能断：前 30 秒每 3–5 秒要有一个新东西出现。
-- 前 3 秒直接给命题或动作，不问好、不放 Logo。
-- BGM 从头铺到尾；音效只给事件（中文口播头部每分钟 1–3 个）；揭晓前刻意静音 0.6–1.0 秒。
-- 单机位数字人最便宜的节奏来源：按句子边界跳切推近（1.0× / 1.18× / 1.32×）。
+每种风格自带默认包装，来自 **48 个包装组件**（逐帧拆了 25 支头部博主视频提炼出来的：景深字、数字钉子、对比条、地图航线、弹幕、步骤追踪……）。想加减直接说名字或效果。
 
 <div align="center">
-<a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/packaging-gallery.mp4"><img src="docs/gifs/packaging-gallery.gif" width="560"></a><br>
+<a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/packaging-gallery.mp4"><img src="docs/gifs/packaging-gallery.gif" width="560" alt="48 个包装组件图鉴"></a><br>
 <b>包装组件图鉴</b> · 48 个组件 · 2 分 40 秒 · <a href="https://github.com/andyhuo520/digital-human-koubo/releases/download/v1.0.0/packaging-gallery.mp4">▶ 播放</a>
 </div>
 
-<p align="center"><img src="docs/images/packaging-gallery.jpg" width="820" alt="包装组件图鉴"></p>
-
-| 分组 | 组件 |
-|---|---|
-| 开场 / 钩子 | TeaserColdOpen 预告闪回 · ColdOpenFreeze 定格片名卡 · SearchTyping 搜索框打字 · NumberSpike 数字钉子 · SlamText 砸字 · WordStack 逐词堆叠 · TornStrip 撕纸标题 · **TextBehind 景深字** |
-| 证据 / 数据 | EvidenceCard 证据截图 · DocFocus 文档聚焦 · SourceDoc 官方文档 · ZoomFocus 截图聚焦 · Counter 数字滚动 · Odometer 里程表 · GlassPanel 玻璃面板 · SpecCard 参数卡 · LineDraw 折线图 · BarCompare 对比条 · ReviewCards 评论卡 · ArchiveCards 档案卡 · MapRoute 地图航线 · CompareWipe 前后对比 · PaperCollage 纸张拼贴 |
-| 标注 / 人物 | HandDraw 手绘圈注 · CalloutPill 指针胶囊 · LeaderLabel 引线标注 · TypedNameTag 打字名牌 · LowerThird 人名条 · NamePlate 名牌语录 · SourceTag 出处角标 · FreezeFrame 定格「等等！」 |
-| 节奏 / 互动 | PunchInHost 跳切推近 · KeywordStack 关键词三连 · RetentionCaption 留存大字幕 · TiltLine 倾斜金句 · Aside 括号旁白 · Danmaku 弹幕 · ReactionPop 反应贴纸 · MemeWindow 梗图窗 · PollPop 投票 · GlitchInterstitial 故障插屏 · HostFloaters 悬浮窗 · ProgressChapters 进度条 · ProgressTracker 步骤追踪 · ChapterCard 章节卡 · RecapBoard 复盘板 · Countdown 倒计时 · GhostWord 鬼影大字 |
-
-每个组件都在 `pack` 列表里按名字调用，时间写成「段:词」（如 `"3:积分"`），9:16 自动适配：
-
-```json
-"pack": [
-  { "use": "NumberSpike", "at": "1:不到十块钱", "until": "1:end", "text": "¥9.9/节", "label": "一节课" },
-  { "use": "Danmaku", "items": [{ "t": "真的假的？", "at": "1:" }, { "t": "AI 还能帮我干活？", "at": "1:教你", "hot": true }] },
-  { "use": "TextBehind", "src": "main.mp4", "cutout": "main_cut_s4.webm", "cutoutFrom": 17.2, "at": "4:", "until": "4:end",
-    "mode": "count", "lines": [{ "t": "¥99", "font": "en", "color": "#FFE14D", "size": 0.17 }], "count": { "from": 999, "to": 99, "prefix": "¥" } }
-]
-```
-参数说明：[`references/packaging.md`](skills/digital-human-koubo/references/packaging.md)。渲染前先检查：`python3 scripts/check_edit.py <工程>/src`。
-
-### 景深字：文字在人身后
-
-<p align="center"><img src="docs/images/text-behind-layers.jpg" width="760" alt="原视频 → 人像遮罩 → 原视频 + 大字 + 人像"></p>
-
-```bash
-python3 scripts/cutout_video.py public/main.mp4 public/main_cut_s4.webm --from 17.2 --to 22.4   # 只抠用到的那几秒
-```
-Linux / Windows 上遮罩来自 ComfyUI 里的 BiRefNet，macOS 上来自 Apple Vision。适合**中景、头顶留白**的画面。自拍特写里人占了约 89% 的画面，字会被挡住，脚本在超过 60% 时会提醒。把这类段落标成 `"shot": "depth"`，生成时就会出中景。
-
-<p align="center"><img src="docs/images/closeup-vs-medium.jpg" width="560" alt="特写 89% 挡字，中景 57% 露字"></p>
+模板、组件清单和参数：[docs/PACKAGING.zh-CN.md](docs/PACKAGING.zh-CN.md)。
 
 ---
 
-## 目录结构
+## 踩过的坑
 
-```
-skills/
-  digital-human-koubo/            主 Skill
-    SKILL.md                      Agent 照着执行的流程
-    persona.json                  主播形象、声音描述、提示词模板
-                                  （comfy：本地路线配置、主播的 voice_ref / look / look_person、H3 提示词模板）
-    comfy/                        ComfyUI API 流程：tts_clone · h3_r2v_audio · h3_i2v · qwen_t2i · music
-    references/                   风格菜单 · 包装组件 · 手法库 · 安装 · 拆解报告
-    scripts/                      comfy_batch（本地配音 + H3 对口型）· comfy_scene · comfy_broll · comfy_music
-                                  face_center（mediapipe 量脸）· numcn（数字转中文读法，回听比对用）
-                                  build_tasks · rangedl · assemble · align · check_edit · cutout_video
-                                  voicefx/unify · doctor · new_edit · make_assets
-                                  make_cover · cover_first（封面 + 首帧）
-                                  lin_scenes · lin_subs · lin_sfx · lin_mix（风格 A 分镜、字幕、音效、混音）
-                                  misread_check · patch_words（查念错字、只换错句保口型）
-    templates/
-      huazi-916/                  9:16 数据驱动花字口播模板（edit.json）
-      packaging/                  48 个组件 + 图鉴工程
-      lin-169/                    16:9 小林式解说模板（scenes.json 驱动，13 种场景）
-      reference/                  launch-169 · tutorial-169 · multihost-169
-    assets/                       风格预览图 · 包装图鉴 · 数字人参考图
-                                  host_girl_*.png · voice_ref_*.flac（本地路线主播）
-  finance-explainer/              纯图表财经长片引擎（episode.json 拍表、检索工具）
-workflows/                        本地路线用到的 ComfyUI 工作流（界面格式），附与 API 文件的对照
-docs/                             安装说明（INSTALL.zh-CN.md）、README 用的图片、GIF 预览、封面帧
-```
+下面这些 Skill 里都已经处理了，列三条有代表性的：
 
-## 踩过的坑（Skill 里都处理了）
+- **不开 Lightning LoRA，H3 在 24 GB 上会爆显存，卡在第 0 步** → 流程里主播固定用 4 步 LoRA、B-roll 用 8 步。
+- **Qwen3-TTS 偶尔念糊一个词**（比如 MiniMax 念成 mini maxax）→ 每句都不带原文回听比对，念错的换个种子只重配那一句。
+- **几十段口播直接拼接，声音会逐段落后口型**（实测 44 段后晚 0.38 秒）→ 拼接前把每段音频补齐到画面长度，并校验音画等长。
 
-### 本地路线
+其余十几条和排查办法：[docs/TROUBLESHOOTING.zh-CN.md](docs/TROUBLESHOOTING.zh-CN.md)。
 
-- 不开 Lightning LoRA，H3 在 0.8MP 下超过 24 GB，卡在第 0 步 → 流程里主播用 4 步、B-roll 用 8 步 LoRA。
-- Qwen3-TTS 偶尔会念糊一个词（比如 MiniMax 念成 mini maxax）→ 每句都用 SenseVoice **不带原文**回听；在那段加 `"seed": 新数` 重跑，只重配那一段。
-- 单句超过 14 秒会直接报错 → 拆短；H3 单镜头太长质量会掉。
-- 用场景图当参考时，`look` 里写的演播室会把背景拉回去（暖白直播间被画成深蓝墙）→ `look_person` 只写人物，段落有 `"ref"` 时自动用它。
-- MiniMax Music 3 容易提前收尾（要 60 秒只给 28 秒）→ lyrics 里 `[Instrumental]` 标签越多越长（5 个约 37 秒）；剪辑模板本来就会循环。
-- H3 画招牌会出乱码字 → 写 "shop signs are blurred and out of focus"，或者挑没有招牌的画面。
-- `~/.bashrc` 里写在「非交互就 return」那行之后的变量，脚本读不到 → earshot 去连 Hugging Face 卡住；`EARSHOT_*` 要写在那行之前。
-- whisper / SenseVoice 会把念出来的数字写成阿拉伯数字（七十二 → 72）→ `numcn.py` 比对前两边都转成读法。逐位念法（「三零九零」对 3090）和同音字仍可能被标出来 → 先听再决定重配。
+---
 
-### 两条路线通用 / 云端路线
+## 文档
 
-- 几十段口播直接拼接，声音会一段段累积落后口型（实测 44 段到 4:43 晚 0.38 秒）→ `assemble.py` 拼接前把每段音频补齐到画面长度，并校验音画等长。
-- whisper 带原文提示会把念错的字「纠正」回去 → `misread_check.py` 按停顿切句、不带原文转写；念错的用 `patch_words.py` 只换那一句（克隆音拉到原句长度），口型不受影响，不用整片换音色。
-- 另配声音轨时，主播视频轨一定要静音；两条声音差几毫秒叠在一起会刺耳（梳状滤波）。
-- expo 缓动到不了终点（99.9 四舍五入成 100）→ 计数动画结束时强制落在精确值。
-- Grok 横屏口播偶尔**自己烧字幕**，提示词写了也挡不住 → 抽帧检查，重拍那段。
-- whisper 会把中文数字写成阿拉伯数字（九百九十九 → 999），准确率会掉，但其实没念错 → 先听再决定重拍。
-- Renoise 美国 CDN 并行下载会断成半截 → `rangedl.py` 6 段 Range 续传 + 解码校验。
-- Grok 9:16 720p 是 **720×1280**，别拉成别的比例。
+| 文档 | 内容 |
+|---|---|
+| [安装](docs/INSTALL.zh-CN.md) | ComfyUI 节点包和模型清单、Python 环境、本机工具、主播声音、earshot |
+| [工作流与架构](docs/WORKFLOWS.zh-CN.md) | 脚本流水线、ComfyUI 工作流和 API 图、模型文件、主播配置、GPU 用时、目录结构 |
+| [风格与包装组件](docs/PACKAGING.zh-CN.md) | 五种风格的模板、48 个组件清单、`pack` 写法、景深字 |
+| [云端路线](docs/CLOUD.zh-CN.md) | Renoise MCP 接入、云端示例、MiMo 语音、积分成本 |
+| [踩过的坑](docs/TROUBLESHOOTING.zh-CN.md) | 本地和云端路线的已知问题与处理 |
+| [`workflows/`](workflows/README.md) | 可以直接拖进 ComfyUI 的界面格式工作流 |
+
+---
 
 ## 使用红线
 
