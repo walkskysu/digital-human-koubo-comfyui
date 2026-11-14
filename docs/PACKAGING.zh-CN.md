@@ -1,6 +1,6 @@
 # 剪辑风格与 48 个包装组件
 
-[返回 README](../README.zh-CN.md)
+[English](PACKAGING.md) · [返回 README](../README.md)
 
 ## 五种剪辑风格
 

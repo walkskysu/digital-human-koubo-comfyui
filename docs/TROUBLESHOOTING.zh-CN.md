@@ -1,6 +1,6 @@
 # 踩过的坑（Skill 里都处理了）
 
-[返回 README](../README.zh-CN.md) · [安装](INSTALL.zh-CN.md)
+[English](TROUBLESHOOTING.md) · [返回 README](../README.md) · [安装](INSTALL.zh-CN.md)
 
 下面每一条都是实际做片时遇到的，箭头后面是 Skill 现在的处理办法。先跑一遍 `bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh`，环境问题它会直接列出来。
 

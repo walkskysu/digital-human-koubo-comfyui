@@ -1,6 +1,6 @@
 # 本地路线：ComfyUI 工作流、脚本与架构
 
-[返回 README](../README.zh-CN.md) · [安装](INSTALL.zh-CN.md) · [排错](TROUBLESHOOTING.zh-CN.md)
+[English](WORKFLOWS.md) · [返回 README](../README.md) · [安装](INSTALL.zh-CN.md) · [排错](TROUBLESHOOTING.zh-CN.md)
 
 这份是查阅用的参考：每一步跑哪个脚本、提交哪张 ComfyUI 图、用到哪些模型文件。只想出片的话不用读，跟 Agent 说一句话就行。
 

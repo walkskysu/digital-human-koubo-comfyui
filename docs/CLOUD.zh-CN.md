@@ -1,6 +1,6 @@
 # 云端路线（Renoise MCP，可选）
 
-[返回 README](../README.zh-CN.md)
+[English](CLOUD.md) · [返回 README](../README.md)
 
 本仓库的重点是本地 ComfyUI 路线。原项目 [andyhuo520/digital-human-koubo](https://github.com/andyhuo520/digital-human-koubo) 的云端路线（Grok Video、GPT Image、Wan）原样保留，每条片子可以自己选，也可以和本地路线混着用。
 

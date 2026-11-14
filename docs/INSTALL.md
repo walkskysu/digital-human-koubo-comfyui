@@ -1,8 +1,8 @@
 # Install (local ComfyUI route)
 
-[中文](INSTALL.zh-CN.md) · [Back to README](../README.md)
+[中文](INSTALL.zh-CN.md) · [Back to README](../README.en.md)
 
-Once it's installed, see [Quick start](../README.md#quick-start) in the README.
+Once it's installed, see [Quick start](../README.en.md#quick-start) in the README.
 
 **Tested setup:** RTX 3090 (24 GB VRAM) + 34 GB RAM. ComfyUI Desktop on Windows; the skill and agent run in WSL2 Ubuntu and reach ComfyUI at `127.0.0.1:8188`. A native Linux ComfyUI works the same way. The local route needs **no MCP server** — the scripts call ComfyUI's HTTP API directly, so any agent that can run local commands can drive it.
 
@@ -83,7 +83,7 @@ bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh
 
 ## 5 · Your presenter's voice
 
-Record 12–20 s of clean, dry speech of **your own** voice (or one you're licensed to use), save it under `assets/`, and set `voice_ref` and `voice_ref_text` (the exact words) for the host in `persona.json → comfy.hosts`. Two AI-generated sample presenters are included (see [Presenters](../README.md#presenters-for-the-local-route)).
+Record 12–20 s of clean, dry speech of **your own** voice (or one you're licensed to use), save it under `assets/`, and set `voice_ref` and `voice_ref_text` (the exact words) for the host in `persona.json → comfy.hosts`. Two AI-generated sample presenters are included (see [Presenters](WORKFLOWS.md#presenters-for-the-local-route)).
 
 ## 6 · earshot — sound effects and BGM check
 

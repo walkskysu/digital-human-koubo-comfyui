@@ -1,8 +1,8 @@
 # 安装（本地 ComfyUI 路线）
 
-[English](INSTALL.md) · [返回 README](../README.zh-CN.md)
+[English](INSTALL.md) · [返回 README](../README.md)
 
-装好后看 README 的[快速开始](../README.zh-CN.md#快速开始)。
+装好后看 README 的[快速开始](../README.md#快速开始)。
 
 **实测环境**：RTX 3090（24 GB 显存）+ 34 GB 内存。Windows 上跑 ComfyUI Desktop；Skill 和 Agent 在 WSL2 Ubuntu 里，通过 `127.0.0.1:8188` 连过去。Linux 原生 ComfyUI 一样用。本地路线**不需要 MCP**：脚本直接调 ComfyUI 的 HTTP API，只要 Agent 能在本机跑命令就能驱动。
 
