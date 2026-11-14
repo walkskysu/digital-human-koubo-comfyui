@@ -32,7 +32,7 @@ Models for the local route / 本地路线用到的模型 — downloaded by you i
 | [CLAP `laion/larger_clap_general`](https://huggingface.co/laion/larger_clap_general), [AST `MIT/ast-finetuned-audioset-10-10-0.4593`](https://huggingface.co/MIT/ast-finetuned-audioset-10-10-0.4593) | `earshot describe` (genre / vocal check of generated BGM) | earshot |
 
 
-The local-route sample presenters `assets/host_girl_*.png` and voice samples `assets/voice_ref_*.flac` are AI-generated; they are not photos or recordings of real people. 本地路线的示例主播图和声音样本均为 AI 生成，不是真人照片或录音。
+The local-route sample presenters `assets/host_annie_*.png` and voice samples `assets/voice_ref_*.flac` are AI-generated; they are not photos or recordings of real people. 本地路线的示例主播图和声音样本均为 AI 生成，不是真人照片或录音。
 
 Services you connect with your own account / 需要你自己账号的服务:
 - [Renoise](https://renoise.ai/mcp?utm_medium=xcom&utm_source=official) — image & video generation (Grok Video, Wan, GPT Image, Seedance, …) through MCP. Usage is billed to your Renoise credits.

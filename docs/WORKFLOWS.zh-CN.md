@@ -56,7 +56,7 @@ script.json ─► comfy_batch.py --stage plan     估每段要多少 GPU 时间
 
 ## 本地路线的主播
 
-`persona.json → comfy.hosts` 定义每个本地主播：照片（`avatar`）、输出尺寸、声音样本（`voice_ref` + `voice_ref_text`）、给提示词用的英文外形描述（`look`；另有只写人物、不写布景的 `look_person`，配场景图时用）、声音描述、默认构图。自带两个：`tank`（默认的白背心主播，`assets/avatar_ref.jpg`）和 `girl`（`assets/host_girl_*.png`）。`girl` 的形象图和两个声音样本（`assets/voice_ref_*.flac`）都是 AI 生成的，不是真人。H3 提示词模板在 `comfy.prompt_template`（Ref2VA 格式：subject_definitions / summary / retention_analysis / detailed_description / soundscape / music）。
+`persona.json → comfy.hosts` 定义每个本地主播：照片（`avatar`）、输出尺寸、声音样本（`voice_ref` + `voice_ref_text`）、给提示词用的英文外形描述（`look`；另有只写人物、不写布景的 `look_person`，配场景图时用）、声音描述、默认构图。自带两个：`annie`（默认主播，演播室中景，`assets/host_annie_*.png`；默认出 16:9，给 `comfy_batch.py` 加 `--ratio 9:16` 时换用竖屏形象图 `host_annie_vertical.png`）和 `ella`（9:16 自拍特写的白背心主播，`assets/avatar_ref.jpg`）。段落里不写 `host` 时用 `annie`。`annie` 的形象图和两个声音样本（`assets/voice_ref_*.flac`）都是 AI 生成的，不是真人。H3 提示词模板在 `comfy.prompt_template`（Ref2VA 格式：subject_definitions / summary / retention_analysis / detailed_description / soundscape / music）。
 
 ## GPU 用时（RTX 3090 24 GB，实测）
 
@@ -112,7 +112,7 @@ skills/
       lin-169/                    16:9 小林式解说模板（scenes.json 驱动，13 种场景）
       reference/                  launch-169 · tutorial-169 · multihost-169
     assets/                       风格预览图 · 包装图鉴 · 数字人参考图
-                                  host_girl_*.png · voice_ref_*.flac（本地路线主播）
+                                  host_annie_*.png · voice_ref_*.flac（本地路线主播）
   finance-explainer/              纯图表财经长片引擎（episode.json 拍表、检索工具）
 workflows/                        本地路线用到的 ComfyUI 工作流（界面格式），附与 API 文件的对照
 docs/                             安装说明（INSTALL.zh-CN.md）、README 用的图片、GIF 预览、封面帧

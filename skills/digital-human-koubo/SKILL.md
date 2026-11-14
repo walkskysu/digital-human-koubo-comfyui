@@ -109,6 +109,7 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 准备阶段第 0 步选了本地路线时走这条（用户点名本地，或没点名但 8188 能连上）。先配音再出画面：Qwen3-TTS 克隆配音 → MiniMax H3 参考生视频（配音当 `<Audio 1>` fully_copy，口型跟着配音走）→ 把原配音合回画面。配置在 persona.json → `comfy`，流程 JSON 在 `comfy/`。
 1. **检查**：ComfyUI 能连上（`curl -s 127.0.0.1:8188/system_stats`），有 Qwen3-TTS 节点包和 H3 ref2va 模型 + 4 步 Lightning LoRA。主播要有 `voice_ref`（12–20 秒干声 + 逐字文本）。
 2. **估时**：`python scripts/comfy_batch.py script.json --stage plan`（用 `~/.venvs/comfy-mcp/bin/python`，要 PyAV）。不花钱但占 GPU：10 秒一段约 8 分钟（RTX 3090，672×1216，4 步），报给用户。
+   - **主播和画幅**：不写 `"host"` 默认用 `annie`。9:16 竖屏的片子给 `comfy_batch.py` 每个阶段都加 `--ratio 9:16`（或只在某段写 `"ratio": "9:16"`）：`annie` 会换用竖屏形象图 `assets/host_annie_vertical.png`（672×1216，演播室中景）；`ella` 本来就是竖屏自拍特写，只能出 9:16。
 3. **配音**：`--stage tts`。每段配完自动用 SenseVoice 不带原文回听，准确率 < 90% 打 ⚠；念错就在 script.json 那段加 `"seed": 新数` 再跑（只重配这一段）。单段超过 14 秒报错：拆短台词。先让用户听第 1 段确认音色。
 4. **出画面**：`--stage video`（长任务放后台跑）。完成的段记在 `gen/state.json`，中断后重跑自动跳过；台词改了只重做那段。
 5. **检查**：每段抽帧看口型（停顿处闭嘴、结尾闭嘴）和人脸。

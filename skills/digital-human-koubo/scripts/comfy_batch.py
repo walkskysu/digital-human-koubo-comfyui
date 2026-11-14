@@ -2,10 +2,12 @@
 """口播稿 → 本地 ComfyUI 批量生成：Qwen3-TTS 克隆配音 → MiniMax H3 参考生视频（配音当 <Audio 1> fully_copy 对口型）→ 把原配音合回画面。
 
 用法（需要 PyAV：用 ~/.venvs/comfy-mcp/bin/python 跑）：
-  python comfy_batch.py script.json [--stage plan|tts|video|all] [--only s1,s3] [--redo s2] [--seed 20261112] [--steps 4]
+  python comfy_batch.py script.json [--stage plan|tts|video|all] [--only s1,s3] [--redo s2] [--seed 20261112] [--steps 4] [--ratio 9:16]
   某段念错：script.json 那段加 "seed": 新数 再跑（只重做这一段，其他段缓存不受影响）
 
 - script.json 和 build_tasks.py 同一份：[{"id","t","shot","host","lang","purpose"?}, ...]
+- 主播：不写 "host" 用 annie（横屏 16:9）。要竖屏：整条片加 --ratio 9:16，或某段写 "ratio": "9:16"，
+  横屏主播会换用 comfy.hosts.<host>.vertical 里的竖屏形象图；ella 本来就是竖屏自拍。
 - 输出都在 script.json 同目录：
     gen/tts/<id>.flac     Qwen3-TTS 配音（音色 = persona.json → comfy.hosts.<host>.voice_ref）
     gen/raw/<id>.mp4      H3 原始输出（声音是 H3 重新合成的）
@@ -141,10 +143,18 @@ def est_seconds(text, lang):
 
 
 def host_of(s):
-    h = s.get("host", "tank")
+    h = s.get("host", "annie")
     if h not in C["hosts"]:
         sys.exit(f"{s['id']}：persona.json → comfy.hosts 里没有主播「{h}」")
-    return h, C["hosts"][h]
+    H = C["hosts"][h]
+    ratio = s.get("ratio") or RATIO
+    if ratio == "9:16" and H["size"][0] > H["size"][1]:   # 横屏主播要出竖屏：换用 vertical 里的形象图、尺寸和构图
+        if not H.get("vertical"):
+            sys.exit(f"{s['id']}：主播「{h}」只有横屏形象图，没有 comfy.hosts.{h}.vertical，出不了 9:16")
+        H = dict(H, **H["vertical"], _variant="v")
+    elif ratio == "16:9" and H["size"][0] < H["size"][1]:
+        sys.exit(f"{s['id']}：主播「{h}」只有竖屏形象图，出不了 16:9（换一个横屏主播）")
+    return h, H
 
 
 def build_prompt(s, H, lang):
@@ -236,6 +246,8 @@ def do_video(s):
         host = f"{host}_{hashlib.sha1(ref.read_bytes()).hexdigest()[:8]}"
     if sec > C["max_line_seconds"]:
         sys.exit(f"{sid} 配音 {sec:.2f}s 超过 {C['max_line_seconds']}s：拆短台词，重新配音")
+    if H.get("_variant") and not s.get("ref"):
+        host = f"{host}_{H['_variant']}"
     n = frames_for(sec + C["tail_seconds"])
     prompt = build_prompt(s, H, lang)
     w, h = H["size"]
@@ -286,7 +298,7 @@ def plan(S):
 
 
 def main():
-    global ROOT, GEN, STATE_F, STATE, PROJ, SEED, STEPS, REDO, PURPOSE
+    global ROOT, GEN, STATE_F, STATE, PROJ, SEED, STEPS, REDO, RATIO, PURPOSE
     if len(sys.argv) < 2 or sys.argv[1].startswith("-"):
         sys.exit(__doc__)
     src = Path(sys.argv[1]).resolve()
@@ -296,6 +308,7 @@ def main():
     PROJ = re.sub(r"[^\w-]", "_", ROOT.name)[:40] or "koubo"
     SEED, STEPS = int(arg("--seed", 20261112)), int(arg("--steps", 4))
     REDO = set(filter(None, arg("--redo", "").split(",")))
+    RATIO = arg("--ratio")   # 9:16 / 16:9；不写就按主播形象图自己的画幅
     PURPOSE = arg("--purpose", "like a friendly Chinese tech vlogger explaining clearly")
     stage = arg("--stage", "all")
     S = json.loads(src.read_text())

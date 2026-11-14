@@ -37,7 +37,7 @@ def add(d, gap=0.12):
 def nar_new(i, ch):
     r = NEW[i]; add(dict(kind='nar', id=i, ch=ch, host=r['host'], shot=r['shot'], text=r['t'], src=f'nar/{i}.mp4', dur=Q[i]['keep'], chars=chars_of(i, r['t'])))
 def nar_old(i, ch):
-    s = S2[i]; add(dict(kind='nar', id=i, ch=ch, host='tank', shot=s['shot'], text=s['t'], src=f'nar/{i}.mp4', dur=Q2[i]['keep'], chars=chars_of(i, s['t'])))
+    s = S2[i]; add(dict(kind='nar', id=i, ch=ch, host='ella', shot=s['shot'], text=s['t'], src=f'nar/{i}.mp4', dur=Q2[i]['keep'], chars=chars_of(i, s['t'])))
 def clip(i, role, ch, dur=None, offset=0.0, audio=True, gap=0.0):
     r = NEW[i]; d = dict(kind='clip', id=i, role=role, ch=ch, src=f'scene/{i}.mp4', vert=Q[i]['vert'], text=r['t'], dur=round(dur or Q[i]['keep'] - offset, 3), offset=offset, audio=audio)
     if role == 'lang': d.update(label=LBL[i][0], zh2=LBL[i][1], zh=ZH[i])

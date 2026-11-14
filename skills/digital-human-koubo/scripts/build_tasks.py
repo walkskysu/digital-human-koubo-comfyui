@@ -4,8 +4,8 @@
 用法：
   python3 build_tasks.py script.json out_tasks.json [--purpose "teaching a beginner tutorial step by step"] [--all-720p]
 
-script.json：[{"id": "s1", "shot": "full|pip|vlog", "t": "这一段要念的台词", "host": "tank|me", "lang": "Mandarin Chinese|English|Japanese|…"}, ...]
-- host：tank = 白背心数字人（9:16，默认）；me = 用户本人数字人（16:9，persona.json → other_hosts.me）
+script.json：[{"id": "s1", "shot": "full|pip|vlog", "t": "这一段要念的台词", "host": "ella|me", "lang": "Mandarin Chinese|English|Japanese|…"}, ...]
+- host：ella = 白背心数字人（9:16，默认）；me = 用户本人数字人（16:9，persona.json → other_hosts.me）
 - lang：不写就是普通话；外语段台词直接写目标语言
 - 每段时长 = ceil(字数 / 5.4 + 1.0)，夹在 4–15 秒（Grok 单段上限 15 秒；5.4 字/秒是实测语速）
 - full 段 720p，pip 段 480p（画中画里看不出差别，便宜四成）；--all-720p 全部 720p
@@ -42,7 +42,7 @@ def main():
         res = P["model"]["full_shot_resolution"] if (all720 or shot != "pip") else P["model"]["pip_shot_resolution"]
         total += d * P["model"]["price_per_second"][res]
         act = P["acts"].get(shot, P["acts"]["full"])
-        if s.get("host", "tank") == "me":
+        if s.get("host", "ella") == "me":
             H = P["other_hosts"]["me"]; ref = H["reference_material"]; ratio = H["ratio"]
             prompt = H["prompt_template"].format(ref="@" + ref, purpose=purpose, act=act, voice=H["voice"], language=lang, line=s["t"])
         else:

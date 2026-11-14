@@ -28,7 +28,7 @@ Voice cloning, lip sync, scene images, B-roll, music, captions and the edit are 
 You tell your agent:
 
 ```text
-Use local ComfyUI for a 9:16 captioned talking head, host tank, 45 seconds: five talking-head styles from one photo and one GPU, lively captions.
+Use local ComfyUI for a 9:16 captioned talking head, host ella, 45 seconds: five talking-head styles from one photo and one GPU, lively captions.
 ```
 
 One RTX 3090 later, you get this 44-second video (click the image for the full video with sound):
@@ -71,7 +71,14 @@ It ticks off what is already installed and lists what is missing (ffmpeg, Node.j
 Use local ComfyUI: a 40-second 9:16 talking-head video about the rule of 72, with animated captions.
 ```
 
-The skill uses the local route whenever `127.0.0.1:8188` is up. Two AI-generated sample presenters (`tank`, `girl`) and their voice samples are included, so you can make a first video without preparing a photo or a recording.
+The skill uses the local route whenever `127.0.0.1:8188` is up. Two sample AI digital-human presenters and their voice samples are included, so you can make a first video without preparing a photo or a recording:
+
+| Presenter | Look | Aspect ratio |
+|---|---|---|
+| `annie` (default) | studio medium shot | portraits for both 16:9 and 9:16 |
+| `ella` | selfie close-up | 9:16 |
+
+Without a named presenter the skill uses `annie`; to switch, say "host ella" in your request.
 
 <details>
 <summary>Not using Claude Code? Setup for other agents</summary>
@@ -119,13 +126,13 @@ One video per editing style, each made end to end on a single RTX 3090. Under ea
 | | |
 |:---:|:---:|
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4"><img src="docs/gifs/local-a-72-rule.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4"><img src="docs/gifs/local-c-h3-launch.gif" width="400"></a> |
-| **Style A · Xiaolin-style explainer** · 16:9 · 35 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>"Use local ComfyUI for a Xiaolin-style explainer on the rule of 72 (how long until your money doubles), 16:9, 35 seconds. Open with text behind the presenter, put the worked example on a board with a presenter window, host girl."</sub> | **Style C · Launch breakdown** · 16:9 · 41 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>"Use local ComfyUI for a launch breakdown: MiniMax H3 is open source and generates picture and sound together, 40 seconds, presenter at the side, with spec cards."</sub> |
+| **Style A · Xiaolin-style explainer** · 16:9 · 35 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>"Use local ComfyUI for a Xiaolin-style explainer on the rule of 72 (how long until your money doubles), 16:9, 35 seconds. Open with text behind the presenter, put the worked example on a board with a presenter window, host annie."</sub> | **Style C · Launch breakdown** · 16:9 · 41 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>"Use local ComfyUI for a launch breakdown: MiniMax H3 is open source and generates picture and sound together, 40 seconds, presenter at the side, with spec cards."</sub> |
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4"><img src="docs/gifs/local-d-tutorial.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4"><img src="docs/gifs/local-e-relay.gif" width="400"></a> |
-| **Style D · Step-by-step tutorial** · 16:9 · 44 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>"Use local ComfyUI for a step-by-step tutorial: make a talking-head video on your own PC in three steps (clone the voice → generate the video → edit), 16:9, 45 seconds, host girl."</sub> | **Style E · Two-host relay** · 16:9 · 37 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>"Local ComfyUI, no credits: two hosts take turns on three Singles' Day shopping traps, 16:9, 40 seconds." (the request was made in Chinese)</sub> |
+| **Style D · Step-by-step tutorial** · 16:9 · 44 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>"Use local ComfyUI for a step-by-step tutorial: make a talking-head video on your own PC in three steps (clone the voice → generate the video → edit), 16:9, 45 seconds, host annie."</sub> | **Style E · Two-host relay** · 16:9 · 37 s · [▶ Watch](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>"Local ComfyUI, no credits: two hosts take turns on three Singles' Day shopping traps, 16:9, 40 seconds." (the request was made in Chinese)</sub> |
 
 Style B (9:16 talking head with animated captions) is [the one at the top of this page](#one-sentence-one-finished-video).
 
-> All presenters are AI digital humans (`assets/host_girl_*.png` and the voice samples are AI-generated, not real people), and every video carries the label "内容由 AI 数字人演绎" (performed by an AI digital human). The demo videos are in Chinese.
+> All presenters are AI digital humans (`assets/host_annie_*.png` and the voice samples are AI-generated, not real people), and every video carries the label "内容由 AI 数字人演绎" (performed by an AI digital human). The demo videos are in Chinese.
 
 ---
 
@@ -160,7 +167,7 @@ Make a local 45-second launch breakdown: Qwen3-TTS clones a voice from a dozen s
 Make a local tutorial: installing the Lightning LoRA in ComfyUI in four steps, with terminal footage and a step tracker for each.
 
 # E · Multi-host · multi-language · multi-scene (16:9)
-girl and tank take turns on three renting traps: put girl in a Qwen Image apartment-complex scene for the second one, and have tank do the third in English.
+annie and ella take turns on three renting traps: put annie in a Qwen Image apartment-complex scene for the second one, and have ella do the third in English.
 
 # General
 Use my digital human skill to present this: … (paste your content)

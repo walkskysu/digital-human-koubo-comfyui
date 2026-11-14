@@ -7,13 +7,13 @@ ACT={'full':"warm eye contact, expressive face, natural hand gestures",
      'pip':"calm explaining tone, small nods, occasionally glancing down as if reading a screen, small pointing gestures"}
 def lang_name(l): return {"Mandarin":"Mandarin Chinese"}.get(l,l)
 def narr(r):
-    if r['host']=='tank':
-        ref=R['tank']; who=f"The young woman in @{ref} talks straight into her phone's front camera, same selfie framing, lighting and outfit as the reference, like a friendly tech vlogger presenting a tutorial"
+    if r['host']=='ella':
+        ref=R['ella']; who=f"The young woman in @{ref} talks straight into her phone's front camera, same selfie framing, lighting and outfit as the reference, like a friendly tech vlogger presenting a tutorial"
         pron,v,ratio="She",TANK_V,"9:16"
     else:
         ref=R['me']; who=f"The man in @{ref} talks straight to the camera, same framing, gray studio backdrop, navy polo shirt, glasses and soft lighting as the reference, like a friendly tech blogger presenting a tutorial"
         pron,v,ratio="He",ME_V,"16:9"
-    cam="Handheld selfie feel with only a very slight natural sway." if r['host']=='tank' else "Locked-off camera, no zoom."
+    cam="Handheld selfie feel with only a very slight natural sway." if r['host']=='ella' else "Locked-off camera, no zoom."
     act=ACT['full' if r['shot']=='full' else 'pip']
     if r['id'].startswith('L_'): act="bright friendly greeting, a small wave at the start, warm smile"
     p=(f"{who}: {act}. {cam} {pron} speaks {lang_name(r['lang'])}, clearly lip-synced, in a {v}:\n“{r['t']}”\n"

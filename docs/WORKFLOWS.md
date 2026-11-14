@@ -56,7 +56,7 @@ Flattened API-format graphs. The scripts load them, fill in text / images / audi
 
 ## Presenters for the local route
 
-`persona.json → comfy.hosts` defines each local presenter: photo (`avatar`), output size, voice sample (`voice_ref` + `voice_ref_text`), English appearance text for the prompt (`look`, plus `look_person` without the studio for use with scene images), voice description and default framing. Two are included: `tank` (the default white-tank-top host, `assets/avatar_ref.jpg`) and `girl` (`assets/host_girl_*.png`). The `girl` images and both voice samples (`assets/voice_ref_*.flac`) are AI-generated, not real people. The H3 prompt template is `comfy.prompt_template` (Ref2VA format: subject_definitions / summary / retention_analysis / detailed_description / soundscape / music).
+`persona.json → comfy.hosts` defines each local presenter: photo (`avatar`), output size, voice sample (`voice_ref` + `voice_ref_text`), English appearance text for the prompt (`look`, plus `look_person` without the studio for use with scene images), voice description and default framing. Two are included: `annie` (the default host, a studio medium shot, `assets/host_annie_*.png`; 16:9 by default, and with `--ratio 9:16` on `comfy_batch.py` it switches to the vertical portrait `host_annie_vertical.png`) and `ella` (the white-tank-top host in a 9:16 selfie close-up, `assets/avatar_ref.jpg`). A segment without `host` uses `annie`. The `annie` images and both voice samples (`assets/voice_ref_*.flac`) are AI-generated, not real people. The H3 prompt template is `comfy.prompt_template` (Ref2VA format: subject_definitions / summary / retention_analysis / detailed_description / soundscape / music).
 
 ## GPU time (RTX 3090 24 GB, real runs)
 
@@ -112,7 +112,7 @@ skills/
       lin-169/                    16:9 Xiaolin-style explainer template (scenes.json-driven, 13 scene types)
       reference/                  launch-169 · tutorial-169 · multihost-169
     assets/                       style previews · packaging gallery · avatar reference
-                                  host_girl_*.png · voice_ref_*.flac (local-route presenters)
+                                  host_annie_*.png · voice_ref_*.flac (local-route presenters)
   finance-explainer/              chart-only finance long-form engine (episode.json beat sheet, research helpers)
 workflows/                        ComfyUI workflows (UI format) behind the local route, with a map to the API files
 docs/                             install guide (INSTALL.md), README images, GIF previews, posters

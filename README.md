@@ -28,7 +28,7 @@
 你对 Agent 说：
 
 ```text
-用本地 ComfyUI 做一条 9:16 花字口播，主播用 tank，45 秒：一张照片、一台显卡做出五种风格的口播，花字用热闹档。
+用本地 ComfyUI 做一条 9:16 花字口播，主播用 ella，45 秒：一张照片、一台显卡做出五种风格的口播，花字用热闹档。
 ```
 
 一张 RTX 3090 跑完后得到这条 44 秒成片（点图看带声音的完整视频）：
@@ -71,7 +71,14 @@ bash ~/.claude/skills/digital-human-koubo/scripts/doctor.sh
 用本地 ComfyUI 做一条 40 秒 9:16 花字口播，讲 72 法则。
 ```
 
-Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 AI 生成的示例主播（`tank`、`girl`）和声音样本，不用先准备照片和录音就能出第一条片。
+Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 AI 数字人示例主播和声音样本，不用先准备照片和录音就能出第一条片：
+
+| 主播 | 形象 | 画幅 |
+|---|---|---|
+| `annie`（默认） | 演播室中景 | 16:9 和 9:16 都有形象图 |
+| `ella` | 自拍特写 | 9:16 |
+
+不指定主播就用 `annie`；想换就在指令里说「主播用 ella」。
 
 <details>
 <summary>用的不是 Claude Code？各 Agent 的装法</summary>
@@ -119,13 +126,13 @@ Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 A
 | | |
 |:---:|:---:|
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4"><img src="docs/gifs/local-a-72-rule.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4"><img src="docs/gifs/local-c-h3-launch.gif" width="400"></a> |
-| **风格 A · 小林式解说** · 16:9 · 35 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>「用本地 ComfyUI 做一条小林式解说：72 法则，存一笔钱多久能翻一倍，16:9，35 秒。开场用景深字，算例放题板配主播小窗，主播用 girl。」</sub> | **风格 C · 发布解读** · 16:9 · 41 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>「用本地 ComfyUI 做发布解读：MiniMax H3 开源了，画面和声音一起生成，40 秒，主播在侧边，配参数卡。」</sub> |
+| **风格 A · 小林式解说** · 16:9 · 35 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-a-72-rule.mp4)<br><sub>「用本地 ComfyUI 做一条小林式解说：72 法则，存一笔钱多久能翻一倍，16:9，35 秒。开场用景深字，算例放题板配主播小窗，主播用 annie。」</sub> | **风格 C · 发布解读** · 16:9 · 41 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-c-h3-launch.mp4)<br><sub>「用本地 ComfyUI 做发布解读：MiniMax H3 开源了，画面和声音一起生成，40 秒，主播在侧边，配参数卡。」</sub> |
 | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4"><img src="docs/gifs/local-d-tutorial.gif" width="400"></a> | <a href="https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4"><img src="docs/gifs/local-e-relay.gif" width="400"></a> |
-| **风格 D · 保姆级教程** · 16:9 · 44 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>「用本地 ComfyUI 做保姆级教程：三步在自己电脑上做出数字人口播（克隆声音 → 生成画面 → 合成剪辑），16:9，45 秒，主播用 girl。」</sub> | **风格 E · 双主播接力** · 16:9 · 37 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>「用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。」</sub> |
+| **风格 D · 保姆级教程** · 16:9 · 44 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-d-tutorial.mp4)<br><sub>「用本地 ComfyUI 做保姆级教程：三步在自己电脑上做出数字人口播（克隆声音 → 生成画面 → 合成剪辑），16:9，45 秒，主播用 annie。」</sub> | **风格 E · 双主播接力** · 16:9 · 37 秒 · [▶ 播放](https://github.com/walkskysu/digital-human-koubo-comfyui/releases/download/local-demos/local-e-relay.mp4)<br><sub>「用本地 ComfyUI 做，不花积分：两个主播接力讲双 11 的三个坑，16:9，40 秒。」</sub> |
 
 风格 B（9:16 网红花字口播）就是[页面顶部那条](#一句话一条成片)。
 
-> 主播全部是 AI 数字人（`assets/host_girl_*.png` 和声音样本都是 AI 生成的，不是真人），每条片子都标了「内容由 AI 数字人演绎」。
+> 主播全部是 AI 数字人（`assets/host_annie_*.png` 和声音样本都是 AI 生成的，不是真人），每条片子都标了「内容由 AI 数字人演绎」。
 
 ---
 
@@ -160,7 +167,7 @@ Skill 检测到 `127.0.0.1:8188` 在线就走本地路线。仓库自带两个 A
 本地做一条教程：在 ComfyUI 里装 Lightning LoRA，分四步，每步配终端画面和步骤追踪。
 
 # E · 多主播 · 多语言 · 多场景（16:9）
-girl 和 tank 接力讲租房的三个坑：第二个坑把 girl 放进 Qwen Image 生成的小区场景里，第三个坑让 tank 用英文讲。
+annie 和 ella 接力讲租房的三个坑：第二个坑把 annie 放进 Qwen Image 生成的小区场景里，第三个坑让 ella 用英文讲。
 
 # 通用
 用我的数字人 Skill 讲这段：……（粘贴你的内容）
