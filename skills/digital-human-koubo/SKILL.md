@@ -120,6 +120,10 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 - **景深字抠像**：`cutout_video.py` 在非 macOS 上自动走 ComfyUI BiRefNet；**量脸**：`lin_scenes.py --face` 自动用 `face_center.py`（mediapipe）。
 - **BGM**：`python scripts/comfy_music.py --out <工程>/public/music/bgm.mp3 [--caption "…"] [--seed 8]`（MiniMax Music 3，纯音乐，60 秒约 1 分钟出）。模型会提前收尾：lyrics 里 `[Instrumental]` 标签越多越长（5 个约 37 秒），比成片短也没关系，lin_mix.py 会循环。出完用 `earshot describe bgm.mp3` 听一下：voice 类别分数要低（没有人声），看 genre/mood 对不对。
 - **earshot**：模型放本地文件夹时，`EARSHOT_CLAP` / `EARSHOT_AST` / `EARSHOT_HOME` / `EARSHOT_OFFLINE=1` 要写在 `~/.bashrc` 的「非交互就 return」那行**之前**，否则脚本里读不到，earshot 会去连 Hugging Face 卡住。`lin_sfx.py` 只用 `kit init/render`，不需要这两个模型。
+- **交付和画质（本地路线默认这样交）**：H3 原片是 1216×672，直接按 1080p 渲染（`--crf=14`，合成帧率设成和原片一样的 24fps，不补帧、不二次压缩），主文件交 `_无封面.mp4` + 单独的封面 jpg。**不主动做本地超分**：超分和美颜让用户在剪映 / CapCut 里一步做完，更快、皮肤也更自然；带封面首帧的版本（`cover_first.py` 会按 CRF 18 再压一次）照常另存一份，用户要直接发布时用。
+  - 用户点名要本地超分时才跑 SeedVR2（模板 `utility_seedvr2_3b_int8_upscale_video`，模型 `seedvr2_3b_int8_convrot` + `seedvr2_ema_vae_fp16`），先报 GPU 时间等同意：2026-11-14 实测 RTX 3090 上 2 倍超分每 3 秒（72 帧）约 6 分钟，47 秒的片子共约 1 小时 50 分钟。
+  - 做法：每段切成约 3 秒的小块、相邻块重叠 6 帧，拼接时交叉淡化；`color_correction_method` 用 `lab`（默认 `none` 会偏红、对比变重）；成片用 `npx remotion render … --scale=2` 出 4K，否则超分的像素放不下。
+  - 这个模板是一步出图，没有细节强度可调：超分会给皮肤加毛孔和小斑点，显得不自然。要压就把超分画面和 lanczos 放大的原片按 50% 混合（ffmpeg `blend`，不占 GPU），代价是发丝锐度也让掉一部分。
 
 ## 参考
 - references/install.md：Renoise MCP 和本机环境的多种装法（只在缺的时候用）
