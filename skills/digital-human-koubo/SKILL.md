@@ -73,7 +73,7 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 
 ### 6. 对齐 + 剪辑
 `python3 scripts/align.py script.json --out <工程>/src/tl.json` 出逐字时间轴，然后按 brief.json 的风格剪：
-- **B 花字口播**：`bash scripts/new_edit.sh huazi-916 <工程>` → 写 `src/edit.json`（关键词、表情、卡片、作品展示、号召，字段见 references/huazi.md）→ `python3 scripts/check_edit.py <工程>/src` → 抽帧 → 渲染。
+- **B 花字口播**：`bash scripts/new_edit.sh huazi-916 <工程>` → 写 `src/edit.json`（关键词、表情、卡片、作品展示、号召，字段见 references/huazi.md）→ `python3 scripts/huazi_sfx.py <工程>/src`（音效排进人声停顿，卡片跟着音效出现）→ `python3 scripts/check_edit.py <工程>/src` → 抽帧 → 渲染 → `python3 scripts/export_mix.py out/raw.mp4 成片_无封面.mp4 --voice public/voice.wav`。
 - **A 小林式**：`bash scripts/new_edit.sh lin-169 <工程>`，按 `references/lin-style.md` 做：
   1. `lin_subs.py` 出字幕（数字用 disp.txt 显示成阿拉伯数字）。
   2. 写 `plan.json`，示例见 `templates/lin-169/plan.example.json`，时间写「@s07:两千」。
@@ -83,11 +83,12 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
   - 只做纯图表、不出镜的财经长片，仍可用 finance-explainer 的引擎。
 - **C / D / E**：`bash scripts/new_edit.sh reference/<目录> <工程>`，换 tl.json，按段重写 Scene（templates/reference/README.md）。
 - **包装（每种风格都做）**：按 `references/packaging-presets.json` 里这个风格的默认包装排——开场 30 秒按 open 顺序、正文保证 stimulus_every_s 秒内有一个新视觉事件、讲到 per_beat 里那类内容就用对应组件、recurring 全片挂着。组件写进 `pack` 数组（字段见 references/packaging.md），手法依据见 references/packaging-playbook.md。用户点名要的手法（「加地图」「开场加预告」「加弹幕」「换成 MrBeast 那种」）在默认基础上加减。用户问「有哪些包装」先发 `assets/packaging/图鉴.jpg`。景深字（文字在人身后）要先跑 `scripts/cutout_video.py` 抠像，见 references/packaging.md。
+- **音效和人声要分开（每种风格都一样）**：音效只放在人声停顿里，前后各留至少 0.2 秒没有人声；所有音效同一响度、比人声大一点；各段人声同一响度（`assemble.py` 默认已做）；导出只加固定增益，不用动态 `loudnorm`。花字模板用 `huazi_sfx.py` + `export_mix.py`（见 references/huazi.md「音效」）；其他模板手排音效时也按这个标准，交付前用 `huazi_sfx.py --check` 的思路量一遍每个音效前后的静音。
 - 声音：数字人视频轨一定 `muted`，人声单独铺一条；多段 Grok 原声用 `python3 scripts/voicefx/unify.py <输出目录> <片段…>` 统一频谱 + 同一个小房间混响（复用旧段时加 `--ref 旧片段目录`，场景/动物片段加 `--scene`）。BGM 压在人声下约 20 dB。
   - **音效**：`python3 scripts/lin_sfx.py <工程>/src/scenes.json --out audio` 按场景自动排音效（earshot 音效库：切画面 whoosh、景深字和结果「碰」、卡片 pop、结论 bell）。音效要高出人声和音乐 8–10 dB，用 `earshot timeline --cues` 复查。
   - **BGM**：用 `earshot rank` 从曲库挑。
   - **混音和导出**：`python3 scripts/lin_mix.py` 做人声链 + BGM 循环避让人声 + 音效，出 −16 LUFS 的 mix.wav；加 `--speed 1.1` 出 1.1 倍成片（BGM 保持原速）。
-  - **音画同步**：交付前在开头、中段、结尾各测一处声音偏移，要小于 10 ms。
+  - **音画同步**：交付前在开头、中段、结尾各测一处声音偏移，要小于 10 ms。Remotion 渲染出来的声音整体晚约 42.7 毫秒（AAC 编码多出 2048 个采样），`export_mix.py --voice` 会量出来并裁掉。
 - 抽帧检查一定看过渡的中间帧和零间隔衔接处（上一条的尾巴会盖住下一条）。
 
 ### 7. 封面 + 首帧（默认做，不用问）
@@ -131,7 +132,8 @@ download_results 拿链接 → 整理成 `urls.txt`（每行 `<taskId>.<ext> <ur
 - references/packaging.md：47 个包装组件的用法和参数（pack 写法、9:16 自动适配）
 - references/packaging-playbook.md：头部博主实测结论（节奏、开场公式、字幕、声音、号召、红线），完整报告在 references/research/
 - references/packaging-presets.json：五种风格各自的默认包装
-- references/huazi.md：花字模板 edit.json 字段、九种卡片、三档强度、写法习惯
+- references/huazi.md：花字模板 edit.json 字段、九种卡片、三档强度、写法习惯、音效排布（只放人声停顿里）
+- scripts/huazi_sfx.py：花字口播排音效（停顿里、同响度、比人声大一点）；scripts/export_mix.py：固定增益导出 + 对回音画同步
 - references/lin-style.md：A 小林式的画面语法、13 种场景、流水线、B-roll 提示词、音效档位、踩过的坑
 - scripts：
   - lin_scenes.py：plan.json 转 scenes.json，自动量脸

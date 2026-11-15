@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """逐段回听 → 剪掉段尾空白 → 统一规格 → 拼接。
-用法：python3 assemble.py script.json ids.json [--out 成片_完整版.mp4] [--lang zh] [--size 宽x高（默认保持源尺寸）]
+用法：python3 assemble.py script.json ids.json [--out 成片_完整版.mp4] [--lang zh] [--size 宽x高（默认保持源尺寸）] [--level -20 | --level off]
 - script.json：[{"id","t",...}]（和 build_tasks.py 同一份）；ids.json：{"s1": 363509, ...}（段 id → Renoise taskId）；下载的文件在 gen/renoise-<taskId>.mp4
 - 每段：whisper 转写（中性提示，不用 --prompt 原文，免得漏前半句）→ 和文稿比准确率 → 只保留到说完后 0.25 秒
 - 输出 cut/<id>.mp4（30fps、48k 立体声）、cut/<id>.json（逐字时间，align.py 用）、cut/qa.json、拼接好的 --out（-16 LUFS）
 - 准确率 < 85% 的段打 ⚠，先人工听；真念错就单独重拍那段
 - 念错字另用 misread_check.py（不带原文提示逐句转写）查，用 patch_words.py 只换错句；改完 --rejoin 只重新拼接
+- 每段人声用固定增益拉到同一响度（说话部分的 RMS，默认 -20 dBFS；--level off 关掉）：各段音量一致，后面排音效、混音才有统一的基准。只加整体增益，不压缩
 - 拼接前每段音频补齐/裁到和画面完全等长（PCM .mov 中转），否则几十段拼下来声音会累积落后口型（2026-10 实测 44 段到 4:43 晚 0.38 秒）"""
 import json, subprocess, difflib, re, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -17,6 +18,21 @@ S = json.load(open(a[0])); IDS = json.load(open(a[1]))
 opt = lambda k, d: a[a.index(k) + 1] if k in a else d
 out_name, lang, size = opt('--out', '成片_完整版.mp4'), opt('--lang', 'zh'), opt('--size', '')
 REJOIN = '--rejoin' in a
+LEVEL = opt('--level', '-20')
+
+
+def speech_gain(wav16k):
+    """这段人声要加多少 dB 才到 LEVEL（只看说话的 10 毫秒帧）；并限制峰值不超过 -1 dBFS。"""
+    if LEVEL == 'off': return 0.0
+    import wave, array, math
+    w = wave.open(wav16k); x = array.array('h', w.readframes(w.getnframes())); w.close()
+    n = 160; sq = []; pk = max((abs(v) for v in x), default=1) / 32768
+    for i in range(0, len(x) - n, n):
+        e = sum(v * v for v in x[i:i + n]) / n / 32768 ** 2
+        if e > 0.012 ** 2: sq.append(e)
+    if not sq: return 0.0
+    g = float(LEVEL) - 10 * math.log10(sum(sq) / len(sq))
+    return round(min(g, -1 - 20 * math.log10(max(pk, 1e-6))), 2)
 SRC = opt('--src', 'gen/renoise-{tid}.mp4')   # 本地 ComfyUI 出的片子用 --src 'gen/{id}.mp4'（comfy_batch.py）
 WM = os.environ.get('WHISPER_MODEL') or next((p for p in map(os.path.expanduser, ['~/Library/Application Support/Murmur/models/ggml-medium-q5_0.bin', '~/models/ggml-medium-q5_0.bin', '~/whisper.cpp/models/ggml-medium-q5_0.bin', '~/.cache/whisper/ggml-medium-q5_0.bin', '~/models/ggml-medium.bin']) if os.path.exists(p)), '~/models/ggml-medium-q5_0.bin')
 clean = lambda s: re.sub(r'[\s，。、：；！？,.:;!?“”]', '', cn_digits(s)).lower()   # 「72」和「七十二」算同一个
@@ -34,11 +50,11 @@ for s in ([] if REJOIN else S):
     w, h = map(int, subprocess.run(['ffprobe', '-v', 'error', '-select_streams', 'v', '-show_entries', 'stream=width,height', '-of', 'csv=p=0', src], capture_output=True, text=True).stdout.split(','))
     sz = size or f'{w - w % 2}x{h - h % 2}'          # 保持源尺寸（Grok 9:16 720p 是 720×1280，别拉成 720×1440）
     acc = difflib.SequenceMatcher(None, clean(s['t']), clean(heard)).ratio()
-    keep = min(dur, en + 0.25)
+    keep = min(dur, en + 0.25); gain = speech_gain(wav)
     subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', src, '-t', f'{keep:.3f}', '-vf', f'scale={sz.replace("x", ":")}:flags=lanczos,fps=30,format=yuv420p',
-                    '-af', f'aresample=48000,afade=t=out:st={max(0, keep - 0.12):.3f}:d=0.12', '-ac', '2', '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-c:a', 'aac', '-b:a', '192k', f'cut/{sid}.mp4'], check=True)
-    rep.append(dict(id=sid, acc=round(acc, 3), speech=[round(st, 2), round(en, 2)], keep=round(keep, 2), src_dur=round(dur, 2), heard=heard))
-    print(f"{'⚠' if acc < 0.85 else ' '}{sid:5s} 准确率 {acc:.0%}  说话 {st:.2f}–{en:.2f}s  保留 {keep:.2f}/{dur:.2f}s  听到：{heard}")
+                    '-af', f'aresample=48000,volume={gain}dB,afade=t=out:st={max(0, keep - 0.12):.3f}:d=0.12', '-ac', '2', '-c:v', 'libx264', '-crf', '17', '-preset', 'medium', '-c:a', 'aac', '-b:a', '192k', f'cut/{sid}.mp4'], check=True)
+    rep.append(dict(id=sid, gain_db=gain, acc=round(acc, 3), speech=[round(st, 2), round(en, 2)], keep=round(keep, 2), src_dur=round(dur, 2), heard=heard))
+    print(f"{'⚠' if acc < 0.85 else ' '}{sid:5s} 准确率 {acc:.0%}  说话 {st:.2f}–{en:.2f}s  保留 {keep:.2f}/{dur:.2f}s  增益 {gain:+.1f}dB  听到：{heard}")
 if REJOIN: rep = json.load(open('cut/qa.json'))
 else: json.dump(rep, open('cut/qa.json', 'w'), ensure_ascii=False, indent=1)
 # 拼接：每段音频 pad/trim 到画面帧数长度（PCM），keep 改成真实画面长度，保证 align.py 的累计时间 = 拼好的画面时间

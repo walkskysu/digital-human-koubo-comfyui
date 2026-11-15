@@ -36,6 +36,11 @@ for k, s in enumerate(ed.get('showcase', [])):
     a, b = T(s['from'], f'showcase[{k}].from'), T(s['to'], f'showcase[{k}].to')
     if a is not None and b is not None and b - a < 1.5: bad.append(f'showcase[{k}]: 只有 {b - a:.1f} 秒，作品看不清（建议 ≥ 3 秒）')
 if ed.get('cta'): T(ed['cta']['at'], 'cta')
+for k, x in enumerate(ed.get('sfx', [])):
+    T(x['at'], f'sfx[{k}] {x.get("name")}')
+    if not (d.parent / 'public' / 'sfx' / f'{x.get("name")}.wav').exists(): bad.append(f'sfx[{k}]: 没有音效 public/sfx/{x.get("name")}.wav')
+    if not 0 <= x.get('vol', 1) <= 1: bad.append(f'sfx[{k}]: vol 要在 0–1 之间（Remotion 不能超过 1）')
+if 'sfx' not in ed: print('提醒：还没排音效。跑 python3 scripts/huazi_sfx.py <工程>/src：音效放进人声停顿、响度统一；不跑的话模板自动配的音效会压在人声上')
 # 包装组件：所有嵌套的 at / until 都检查
 KNOWN = set("""RetentionCaption ZoomFocus HandDraw FreezeFrame LowerThird SourceTag Counter Countdown ChapterCard SpecCard Danmaku ReactionPop ProgressChapters TeaserColdOpen CompareWipe PaperCollage MapRoute
 MemeWindow ColdOpenFreeze EvidenceCard PollPop GlitchInterstitial NamePlate HostFloaters Aside TiltLine DocFocus TypedNameTag PunchInHost RecapBoard SearchTyping CalloutPill LeaderLabel LineDraw BarCompare GhostWord SlamText TornStrip ArchiveCards

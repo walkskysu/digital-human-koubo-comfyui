@@ -27,6 +27,10 @@ type E = {
   music?: { src: string; vol?: number }; voice?: string; video?: string; videoCrop?: number; credits?: string;
   /** 包装组件（templates/packaging 组件库，字段见 references/packaging.md）：[{ use: "Counter", at: "3:积分", ... }] */
   pack?: PackItem[];
+  /** 显式音效表（scripts/huazi_sfx.py 写入）：[{ at: 秒 | "段:词", name: "impact", vol: 0.6 }]，有它就不再自动配音效 */
+  sfx?: Array<{ at: TRef; name: string; vol?: number }>;
+  /** 人声和配乐一起乘的系数（huazi_sfx.py 在音效开到最大还不够响时写入），默认 1 */
+  voiceVol?: number;
 };
 const SEGS = tl.segs as unknown as Seg[];
 const ED = edit as unknown as E;
@@ -353,11 +357,15 @@ const SFX: Array<[number, string, number]> = (() => {
   if (P.sfx > 1) PUNCH.forEach((a) => s.push([a, "pop", 0.3]));
   return s.map(([a, n, v]) => [a, n, Math.min(1, v * P.sfx)]);
 })();
+/* edit.json 里有 "sfx" 就只用这份（scripts/huazi_sfx.py 生成：音效放在人声停顿里、响度统一、比人声高一点），不再自动配。
+   自动配的那套会把音效压在说话的字上，只当没跑 huazi_sfx.py 时的兜底。 */
+const SFX_USE: Array<[number, string, number]> = ED.sfx ? ED.sfx.map((x) => [T(x.at), x.name, x.vol ?? 1]) : SFX;
 
 export const Huazi: React.FC = () => {
   const f = useCurrentFrame();
   const t = f / FPS;
-  const vol = ED.music?.vol ?? 0.075;
+  const VV = ED.voiceVol ?? 1;
+  const vol = (ED.music?.vol ?? 0.075) * VV;
   const showing = inShow(t);
   return (
     <AbsoluteFill style={{ background: "#000" }}>
@@ -371,9 +379,9 @@ export const Huazi: React.FC = () => {
       <TopBar />
       <Captions />
       {ED.credits && <div style={{ position: "absolute", left: 0, right: 0, bottom: 40, textAlign: "center", fontFamily: ZH, fontSize: 20, color: "rgba(255,255,255,.5)", opacity: interpolate(f, [TOTAL_FRAMES - F(TAIL) - 10, TOTAL_FRAMES - F(TAIL)], [0, 1], clamp) }}>{ED.credits}</div>}
-      <Audio src={staticFile(ED.voice ?? "voice.wav")} />
+      <Audio src={staticFile(ED.voice ?? "voice.wav")} volume={VV} />
       {ED.music && <Audio src={staticFile(ED.music.src)} loop volume={(fr) => interpolate(fr, [0, 10, TOTAL_FRAMES - 40, TOTAL_FRAMES - 1], [0, vol, vol, 0], clamp)} />}
-      {SFX.map(([at, name, v], i) => <Sequence key={i} from={Math.max(0, F(at))} durationInFrames={F(2.5)} layout="none"><Audio src={staticFile(`sfx/${name}.wav`)} volume={v} /></Sequence>)}
+      {SFX_USE.map(([at, name, v], i) => <Sequence key={i} from={Math.max(0, F(at))} durationInFrames={F(3.2)} layout="none"><Audio src={staticFile(`sfx/${name}.wav`)} volume={v} /></Sequence>)}
     </AbsoluteFill>
   );
 };
