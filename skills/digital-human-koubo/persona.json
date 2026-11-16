@@ -95,7 +95,7 @@
     "look_person": "long black hair with loose strands framing her face, pink lips, a small mole on her chest, a white ribbed tank top"
    },
    "annie": {
-    "note": "定妆照 assets/host_annie_medium.png（浅灰底中景）；avatar 是用它合成的 16:9 讲解演播室图（comfy_scene.py）。音色是 Qwen3-TTS VoiceDesign 设计的，参照文本见 voice_ref_text。竖屏（9:16）用 vertical 里的形象图：段落写 \"ratio\": \"9:16\" 或命令行加 --ratio 9:16 时自动换用。",
+    "note": "2026-11-16 更新：以用户确认的浅绿针织开衫、米白罗纹内搭、桌前坐姿为统一形象。master 与 vertical.avatar 使用同一竖屏定妆照，avatar 使用配套横屏图；三份资产均采用拉近的腰部以上中景，减少头顶与桌面留白；横屏双手位于画面下沿并部分裁切，竖屏保留双手。背景均为暖米色墙面，点缀小幅抽象挂画、暖光壁灯及小型壁挂绿植，左侧陶瓷杯、右侧桌面麦克风。音色沿用 Qwen3-TTS VoiceDesign，参照文本见 voice_ref_text。竖屏段落写 \"ratio\": \"9:16\" 或命令行加 --ratio 9:16 时自动换用。size 为视频输出尺寸，不是原始图片尺寸。",
     "master": "assets/host_annie_medium.png",
     "avatar": "assets/host_annie_studio.png",
     "size": [
@@ -108,20 +108,21 @@
     "who": "young East Asian woman",
     "pron": "she",
     "poss": "her",
-    "framing": "locked-off medium",
-    "look": "long straight black hair with full bangs, a cream-white ribbed tank top, standing in a calm knowledge-explainer studio with a dark blue-gray wall, softly blurred bookshelf and plants, soft frontal lighting",
+    "framing": "locked-off landscape waist-up medium",
+    "look": "long dark brown hair with wispy bangs and softly tucked sides, a sage-green knitted cardigan over an ivory ribbed scoop-neck top, seated at a light wooden table against a warm beige matte studio wall with a small abstract framed print on the left, a warm wall sconce and a small wall-mounted planter on the right, softly blurred with generous negative space, a cream ceramic mug on the left and a black tabletop microphone on the right, clean uncluttered background",
     "voice": "a gentle, clear, intellectual young female voice",
-    "shot_desc": "A locked-off medium shot of <Subject 1> standing at the center of the studio, framed from the waist up exactly as in <Picture 1>, with generous headroom and background visible on both sides. She looks straight into the lens with calm, friendly eye contact.",
+    "shot_desc": "A locked-off landscape waist-up medium shot of <Subject 1>, closely framed exactly as in <Picture 1>. Her head and upper body fill most of the image height with minimal headroom; her hands appear partially at the lower edge, with the mug and microphone bases cropped by the frame. The warm beige wall has three softly blurred accents: an abstract framed print on the left, a warm wall sconce and a small wall-mounted planter on the right. She looks straight into the lens with calm, friendly eye contact and a gentle smile. Preserve this close medium framing throughout.",
     "camera": "Locked-off camera on a tripod, no zoom, no cuts.",
-    "look_person": "long straight black hair with full bangs, a cream-white ribbed tank top",
+    "look_person": "long dark brown hair with wispy bangs and softly tucked sides, a sage-green knitted cardigan over an ivory ribbed scoop-neck top",
     "vertical": {
      "avatar": "assets/host_annie_vertical.png",
+     "look": "long dark brown hair with wispy bangs and softly tucked sides, a sage-green knitted cardigan over an ivory ribbed scoop-neck top, seated at a light wooden table against a warm beige matte studio wall with a small abstract framed print on the left, a warm wall sconce and a small wall-mounted planter on the right, softly blurred with generous negative space, a cream ceramic mug on the left and a black tabletop microphone on the right, clean uncluttered background",
      "size": [
       672,
       1216
      ],
-     "framing": "locked-off vertical medium",
-     "shot_desc": "A locked-off vertical medium shot of <Subject 1> standing at the center of the studio, framed from the hips up exactly as in <Picture 1>, with generous headroom and background visible on both sides. She looks straight into the lens with calm, friendly eye contact."
+     "framing": "locked-off vertical waist-up medium",
+     "shot_desc": "A locked-off vertical waist-up medium shot of <Subject 1>, closely framed exactly as in <Picture 1>, with minimal headroom, her head, shoulders, torso and both hands visible, and only a narrow strip of tabletop at the bottom. Her face is large and clearly readable. The warm beige wall has a softly blurred abstract framed print on the left, a warm wall sconce and a small wall-mounted planter on the right. A cream mug and black microphone sit at the lower corners and may be partly cropped by the side edges. She looks straight into the lens with calm, friendly eye contact and a gentle smile. Preserve this close medium framing throughout."
     }
    }
   }
